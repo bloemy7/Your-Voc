@@ -1,0 +1,1 @@
+<div id="content" style="margin:10px;font-size:20px;">PAGE D'ERREUR : désolé la page que vous tentez d'afficher n'existe pas</div>
