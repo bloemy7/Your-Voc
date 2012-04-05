@@ -36,7 +36,7 @@ function createListeSelectLangue(){
 						<h3>Catégories</h3>
 						<ul type="circle">
 							<?php
-								$allCat = getAllCategorie();
+								$allCat = getCategories(7);
 								foreach($allCat as $key=>$cat) {
 							?>
 							<li><a href="<?php echo $cat->url() ?>"><?php echo  $cat->name() ?></a> - <i><?php echo $cat->nbListe() ?> listes </i></li><br />
@@ -157,10 +157,10 @@ function createListeSelectLangue(){
 							</ul>
 							<h3>Par thème</h3>
 							<ul type="circle">
-								<li><a href="http://www.your-voc.com/recherche.php?id=%sport%&cat=aucun">Le sport</a></li>
-								<li><a href="http://www.your-voc.com/recherche.php?id=%tourisme%&cat=aucun">Le tourisme - Les voyages</a></li>
-								<li><a href="http://www.your-voc.com/recherche.php?id=%restaurant%&cat=aucun">Le restaurant</a></li>
-								<li><a href="http://www.your-voc.com/recherche.php?id=%musique%&cat=aucun">La musique</a></li>
+								<li><a href="?page=recherche&id=%sport%&cat=aucun">Le sport</a></li>
+								<li><a href="?page=recherche&id=%tourisme%&cat=aucun">Le tourisme - Les voyages</a></li>
+								<li><a href="?page=recherche&id=%restaurant%&cat=aucun">Le restaurant</a></li>
+								<li><a href="?page=recherche&id=%musique%&cat=aucun">La musique</a></li>
 							</ul>
 						</div> 
 					</div>

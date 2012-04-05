@@ -5,6 +5,7 @@ Author : Gannon
 Mofify on : 04 oct. 2011
 Author : Loïc BIGOT
 */
+
 Array.prototype.indexOf = function(obj){
 	var l = this.length;
 	for(var i=0; i<l; i++){
