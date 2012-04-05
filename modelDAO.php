@@ -257,7 +257,7 @@ class CategoriesManager {
 	}
 	
 	public function getNbListeByCategorie($nomCategorie){
-		$result = mysql_query("SELECT * FROM listes_public WHERE categorie = '$idCategorie' OR categorie2 = '$idCategorie'")or die(mysql_error());
+		$result = mysql_query("SELECT * FROM listes_public WHERE categorie = '$nomCategorie' OR categorie2 = '$nomCategorie'")or die(mysql_error());
 		return mysql_num_rows($result);
 	}
 	
@@ -274,9 +274,9 @@ class CategoriesManager {
 	
 	public function getList(){
 		$categories = array();		
-		$q = $this->_db->query('SELECT id, categorie, url, general FROM '.$this->table.' ORDER BY nom');		
+		$q = $this->_db->query('SELECT id, categorie, url, general FROM '.$this->table.' ORDER BY categorie');		
 		while ($donnees = $q->fetch(PDO::FETCH_ASSOC)){
-			$donnees['nbListe'] = getNbListeByCategorie($donnees['categorie']);
+			$donnees['nbListe'] = $this->getNbListeByCategorie($donnees['categorie']);
 			$categories[] = new Categorie($donnees);
 		}		
 		return $categories;

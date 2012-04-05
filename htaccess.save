@@ -1,0 +1,7 @@
+RewriteEngine on 
+RewriteRule   ^accueil$   index.php  [L]
+RewriteRule   ^news$   index.php?v=actus  [L]
+RewriteRule   ^changelog$   index.php?v=patchnotes  [L]
+RewriteRule   ^inscription$   index.php?v=register  [L]
+RewriteRule   ^forum$   index.php  [L]
+
