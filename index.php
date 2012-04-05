@@ -1,16 +1,14 @@
 <?php
 	include("controller.php"); 
-	include("title.php"); 
-	$content = getPage();
-	initTitle($content);		
+	$configPage = getConfigPage();		
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr" > 
 	<head>
         <link rel="stylesheet" href="theme/style.css" />
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />		
-		<title><?php echo $_ENV['title'] ?></title>
-		<meta name="Description" lang="fr" content="<?php echo $_ENV['metaContent'] ?>" />
+		<title><?php echo $configPage->title() ?></title>
+		<meta name="Description" lang="fr" content="<?php echo $configPage->metaContent() ?>" />
 		<script type="text/javascript" src="javascript/jquery-1.6.4.js"></script>
 		<script type="text/javascript" src='javascript/your-voc.js'></script>
 
@@ -36,8 +34,8 @@
 <?php 
 	include("header.php"); 
 
-	include($content);
+	include($configPage->pageName());
 ?>
 		
-		<?php include("footer.php"); ?>
+<?php include("footer.php"); ?>
 	</body>

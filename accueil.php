@@ -35,16 +35,12 @@ function createListeSelectLangue(){
 					<div id="col1">
 						<h3>Catégories</h3>
 						<ul type="circle">
-								<?php
-									$sql2 = mysql_query("SELECT * FROM categories LIMIT 7");
-									while($requete2 = mysql_fetch_array($sql2)) {
-										$cat = $requete2['categorie'];
-										?><li><a href="<?php echo $requete2['url'] ?>"><?php echo $requete2['categorie'] ?></a>
-										<?php $retour = mysql_query("SELECT * FROM listes_public WHERE categorie = '$cat' OR categorie2 = '$cat'")or die(mysql_error());
-										$test = mysql_num_rows($retour);	?>
-										- <i><?php echo $test ?> listes </i></li><br />
-									<?php }
-								?>
+							<?php
+								$categorie = mysql_query("SELECT * FROM categories LIMIT 7");
+								while($cat = getAllCategorie()) {
+							?>
+							<li><a href="<?php echo $cat->url() ?>"><?php echo  $cat->name() ?></a> - <i><?php echo $cat->nbListe() ?> listes </i></li><br />
+							<?php } ?>
 						</ul>
 						<a href="categories.php">Plus de catégories</a><br /><br />
 					</div> 

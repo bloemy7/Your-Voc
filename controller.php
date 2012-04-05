@@ -1,5 +1,6 @@
 <?php
 	include("modelDAO.php");
+	include("title.php");
 	$hostDomain = getProperty("application.host");
 	$redirection = 'Location: http://'.$hostDomain.$_SERVER['REQUEST_URI'];
 	if ($_SERVER['HTTP_HOST'] == "") {		
@@ -10,4 +11,8 @@
 	}*/
 	session_start();
 	dbconnect();
+	
+	function getListeMotByUser($user){
+	
+	}
 ?>
