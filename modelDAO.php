@@ -2,6 +2,15 @@
 function dbconnect(){
     static $connect = null;
     if ($connect === null) {
+		$connect = mysql_connect (getProperty('db.host.name'), getProperty('db.user.name'), getProperty('db.user.mdp'));
+-		mysql_select_db (getProperty('db.name'));
+    }
+    return $connect;
+}
+
+function dbPDO(){
+    static $connect = null;
+    if ($connect === null) {
 		$dbhost = 'mysql:host='.getProperty('db.host.name').';dbname='.getProperty('db.name');
 		$connect = new PDO($dbhost, getProperty('db.user.name'), getProperty('db.user.mdp'));
     }
@@ -31,7 +40,7 @@ function getConfigPage(){
 }
 
 function getAllCategorie(){
-	$manager = new CategoriesManager(dbconnect());
+	$manager = new CategoriesManager(dbPDO());
 	return $manager->getList();
 }
 
