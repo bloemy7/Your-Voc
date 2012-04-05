@@ -36,8 +36,8 @@ function createListeSelectLangue(){
 						<h3>Catégories</h3>
 						<ul type="circle">
 							<?php
-								$categorie = mysql_query("SELECT * FROM categories LIMIT 7");
-								while($cat = getAllCategorie()) {
+								$allCat = getAllCategorie();
+								foreach($allCat as $key=>$cat) {
 							?>
 							<li><a href="<?php echo $cat->url() ?>"><?php echo  $cat->name() ?></a> - <i><?php echo $cat->nbListe() ?> listes </i></li><br />
 							<?php } ?>
