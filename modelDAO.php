@@ -1,6 +1,8 @@
 <?php
 require "/Metier/Categorie.php";
 require "/Metier/CategorieManager.php";
+require "/Metier/ListeMotDefinition.php";
+require "/Metier/ListeMotDefinitionManager.php";
 
 function dbconnect(){
     static $connect = null;
@@ -51,6 +53,16 @@ function getCategories($nb=0){
 	return $liste;
 }
 
+function getListesMotDefinition($nb=0){
+	$manager = new ListeMotDefinitionManager(dbPDO());
+	$liste = $manager->getList();
+	if($nb > 0){
+		$liste = array_slice($liste ,0,$nb);		
+	}
+	return $liste;
+	//$sql = mysql_query("SELECT * FROM listes_public ORDER BY id DESC LIMIT 3");
+}
+
 function getPage(){
 	$filename = "accueil.php";
 	if(isset($_GET['page'])){
@@ -68,95 +80,47 @@ function get_comment($news_id){
 function insert_comment($comment){
 }
 
-class ListeMotDefinition{
-	private $id;
-	private $listeMot = array();
-	private $titre;
-	private $date;
-	private $categorie;
-	private $categorie2;
-	private $note;
-	private $vue;
-	private $commentaire;
-	
-	public function __construct ($listeMot, $titre, $date, $categorie, $categorie2, $note, $vue, $commentaire){
-		$this->listeMot = $listeMot;
-		$this->titre = $titre;
-		$this->date = $date;
-		$this->categorie = $categorie;
-		$this->categorie2 = $categorie2;
-		$this->note = $note;
-		$this->vue = $vue;
-		$this->commentaire = $commentaire;
-    }        
-	
-	public function id(){
-		return $this->id;
-	}
-	public function listeMot(){
-		return $this->listeMot;
-	}
-	public function setListeMot($p_listeMot){
-		if ($p_listeMot == null) {
-                trigger_error('La liste de mot ne doit pas être null', E_USER_WARNING);
-                return;
-        }
-		$this->listeMot = $p_listeMot;
-	}
-	public function titre(){
-		return $this->titre;
-	}
-	public function setTitre($p_titre){
-		$this->titre = $p_titre;
-	}
-	public function date(){
-		return $this->date;
-	}
-	public function setDate($p_date){
-		$this->date = $p_date;
-	}
-	public function categorie(){
-		return $this->categorie;
-	}
-	public function setCategorie($p_categorie){
-		$this->categorie = $p_categorie;
-	}
-	public function categorie2(){
-		return $this->categorie2;
-	}
-	public function setCategorie2($p_categorie2){
-		$this->categorie2 = $p_categorie2;
-	}
-	public function note(){
-		return $this->note;
-	}
-	public function setNote($p_note){
-		$this->note = $p_note;
-	}
-	public function vue(){
-		return $this->vue;
-	}
-	public function setVue($p_vue){
-		$this->vue = $p_vue;
-	}
-	public function commentaire(){
-		return $this->commentaire;
-	}
-	public function setCommentaire($p_commentaire){
-		$this->commentaire = $p_commentaire;
-	}
-}
+
 
 class Mot{
 	private $mot;
 	private $traduction;
 	private $commentaire;
 	
-	public function __construct ($mot, $traduction, $commentaire){
-		$this->mot = $mot;
-		$this->traduction = $traduction;
-		$this->commentaire = $commentaire;
-    }   
+	public function __construct(){
+		$args = func_get_args(); 
+        $nbArgs = func_num_args(); 
+        if ($nbArgs == 3) { 
+        	callConstructor($this, "__construct3", $nbArgs, $args);
+        }else if($nbArgs == 1){
+        	$arg = $args[0];
+        	if(is_array($arg)){
+        		callConstructor($this, "__construct2", $nbArgs, $arg);
+        	}else if(is_string($arg)){
+        		call_user_func_array(array($this,"__construct1"), $arg);
+        	}
+        }
+    }       
+    
+    private function __construct1(String $motAsString){
+    	$indexEgal = strrpos($motAsString, "=");
+    	$indexCom = strrpos($motAsString, "{");
+    	$this->mot = substr($motAsString, $indexEgal);
+    	$this->traduction = substr($motAsString, $indexEgal, $indexCom);
+    	$this->commentaire = substr($motAsString, $indexCom , $strlen($motAsString));
+    }
+    
+    private function __construct2(array $motAsArray){
+    	if(isset($motAsArray['mot']))$this->mot = $motAsArray['mot'];
+    	if(isset($motAsArray['traduction']))$this->traduction = $motAsArray['traduction'];
+    	if(isset($motAsArray['commentaire']))$this->commentaire = $motAsArray['commentaire'];
+    }
+    
+    private function __construct3($mot, $traduction, $commentaire){
+    	$this->mot = $mot;
+    	$this->traduction = $traduction;
+    	$this->commentaire = $commentaire;
+    }
 	
 	public function mot(){
 		return $this->mot;
@@ -175,6 +139,15 @@ class Mot{
 	}
 	public function setCommentaire($p_commentaire){
 		$this->commentaire = $p_commentaire;
+	}
+}
+
+function callConstructor($instance, $constructName, $nbArgs, $args){
+	$isValidConstruct = true;
+	if (method_exists($instance, $constructName, $args)) {
+		call_user_func_array(array($this, $constructName), $args);
+	}else{
+		trigger_error('Les arguments passé en parametre ne correspondent a aucun constructeur', E_USER_WARNING);
 	}
 }
 
@@ -208,4 +181,6 @@ class ConfigPage{
 class User{
 	
 }
+
+
 ?>
