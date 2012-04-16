@@ -56,5 +56,17 @@ function close(){
 			}
 		?>
 		</table>
+		
+		<?php 
+		$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%test%' OR categorie LIKE '%test%' OR categorie2 LIKE '%test%' ORDER BY id DESC") or die (mysql_error()); // la requ�te, que vous devez maintenant comprendre ;)
+		$resultats = mysql_fetch_array($query);
+		$nb_resultats = count($resultats); 
+								
+		if($nb_resultats != 0) {
+			$writeResult = $nb_resultats." résultat";
+			$writeResult .= ($nb_resultats > 1)?"s":"";
+			echo print_r($resultats);
+		}
+	?>
 	</body>
 </html>

@@ -26,7 +26,7 @@ function createListeSelectLangue(){
             <div id="title"><a href="?page=ccm">Your-Voc, c'est quoi ?</a> </div>
 				<p><h3>Avouez-le, vous l'avez tous connu. Un test arrive très rapidement, mais vous ne savez pas comment réviser et vous manquez de motivation.</h3>
 				Et bien, Your-Voc est fait pour vous. Créé par quelqu'un comme vous, pour vous, il vous aidera très facilement à apprendre votre vocabulaire sans y perdre des heures. Vous pouvez passer du temps sur l'ordinateur, Facebook et compagnie, et réviser en même temps. <br />
-				C'est une méthode déjà utilisée, test�e et approuvée dans pleins d'autres pays, et elle débarque désormais en français pour vous, gratuitement.<br />
+				C'est une méthode déjà utilisée, testée et approuvée dans pleins d'autres pays, et elle débarque désormais en français pour vous, gratuitement.<br />
 				Commencez donc par chercher une liste ou bien par créer votre propre liste.<br /></p>
 			</div>
 
@@ -45,77 +45,69 @@ function createListeSelectLangue(){
 						<a href="categories.php">Plus de catégories</a><br /><br />
 					</div> 
 					<div id="col2outer"> 
-						<div id="col2mid"> 							
-							<?php
+						<div id="col2mid"> 		
+							<?php			
 							if(isset($_POST['requete']) && $_POST['requete'] != NULL) {// on vérifie d'abord l'existence du POST et aussi si la requete n'est pas vide.
-								$requete1 = htmlspecialchars(addslashes($_POST['requete'])); // on crée une variable $requete pour faciliter l'�criture de la requète SQL, mais aussi pour empécher les éventuels malins qui utiliseraient du PHP ou du JS, avec la fonction htmlspecialchars().
-								$requete = explode(" ", $requete1);
+								$requete = htmlspecialchars(addslashes($_POST['requete'])); // on crée une variable $requete pour faciliter l'�criture de la requète SQL, mais aussi pour empécher les éventuels malins qui utiliseraient du PHP ou du JS, avec la fonction htmlspecialchars().
+								$requete = explode(" ", $requete);
 								$number = count($requete);
 								$query_made = "";
 								for( $i = 0 ; $i < $number ; $i++) {
 									$query_made .= $requete[$i];
-									$query_made .= "%";
 								}
+								$categorie = "aucun";
 								if($_POST['categorie'] != 'aucun') {
 									$categorie = $_POST['categorie'];
-									$query1 = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY note DESC LIMIT 5") or die (mysql_error()); // la requ�te, que vous devez maintenant comprendre ;)						
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY id DESC") or die (mysql_error()); // la requ�te, que vous devez maintenant comprendre ;)
+								} else {
+									$categorie = $query_made;
 								}
-								else {
-									$query1 = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC LIMIT 5") or die (mysql_error()); // la requ�te, que vous devez maintenant comprendre ;)						
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY id DESC") or die (mysql_error()); // la requ�te, que vous devez maintenant comprendre ;)
-								}
-								$nb_resultats = mysql_num_rows($query); // on utilise la fonction mysql_num_rows pour compter les résultats pour vérifier par après
-								if($nb_resultats != 0) {// si le nombre de résultats est supèrieur à 0, on continue
+								$query_made = "SELECT * FROM listes_public WHERE titre LIKE '%$query_made%' OR categorie LIKE '%$categorie%' OR categorie2 LIKE '%$categorie%' ORDER BY id DESC";
+								$query = mysql_query($query_made) or die (mysql_error());
+								$resultats = mysql_fetch_array($query);
+								$nb_resultats = count($resultats); 
+								
+								if($nb_resultats > 0) {// si le nombre de résultats est supèrieur à 0, on continue
 								// maintenant, on va afficher les r�sultats et la page qui les donne ainsi que leur nombre, avec un peu de code HTML pour faciliter la t�che.
-									$writeResult = $nb_resultats." r�sultat".($nb_resultats > 1)?"s":"";
+									$writeResult = "";
+									if($nb_resultats < 6) {
+										$writeResult = "<br>Voici les listes que nous avons trouvées :<br />";
+									}else{
+										$resultats = array_slice($resultats, 5, 5);
+										$pluriel = ($nb_resultats > 1)?"s":"";
+										$writeResult = "Nous avons trouvé $nb_resultats résultat$pluriel dans notre base de données.";
+										$writeResult = "Voici 5 des $nb_resultats listes que nous avons trouvées:";
+									}
 							?>
 									<h3>Résultats de votre recherche.</h3>
-									<p>Nous avons trouvé <?php echo $writeResult;?> dans notre base de données.
-							<?php 
-									if($nb_resultats < 6) {
-										echo "Voici les listes que nous avons trouvées :<br />";
-									} else {
-							?>
-										Voici 5 des <?php echo $nb_resultats; ?> listes que nous avons trouvées :<br/>
-										<br/>
-							<?
-									}
+									<?php echo $writeResult;?>
+									<br/><br/>
+							<?php
 									$i = 1;
-									while($donnees = mysql_fetch_array($query1)){ // on fait un while pour afficher la liste des fonctions trouv�es, ainsi que l'id qui permettra de faire le lien vers la page de la fonction
-										echo "".$i.". ";
+									foreach($resultats as $resultat){
+										echo $i.". ";
 							?>
-										<a href="afficher.php?id=<?php echo $donnees['id']; ?>"></i><? echo $donnees['titre']; ?></a> <small>entr� le <?php echo $donnees['date'] ?> par <?php echo $donnees['pseudo']; ?> dans les catégories <?php echo $donnees['categorie'] ?> <-> <?php echo $donnees['categorie2'] ?> (<?php echo $donnees['note'] ?>/5)</small><br /><br />
+										<a href="afficher.php?id=<?php echo $resultat['id']; ?>"></i><? echo $resultat['titre']; ?></a> <small>entré le <?php echo $resultat['date'] ?> par <?php echo $resultat['pseudo']; ?> dans les catégories <?php echo $resultat['categorie'] ?> <-> <?php echo $resultat['categorie2'] ?> (<?php echo $resultat['note'] ?>/5)</small><br /><br />
 							<?php
 										$i++;
 									} // fin de la boucle
-									if($nb_resultats < 6) {
+									
+									if($nb_resultats > 5) {
 							?>
-										<a href="recherche.php">Faire une nouvelle recherche</a></p><?php
-									} else {
-										if(isset($_POST['categorie'])) {
-											?>
-											<i><a href="recherche.php?id=<?php echo "%".$query_made.""?>&cat=<?php echo $_POST['categorie'] ?>">Voir la suite des résultats</a></i>
-											<?php
-										}
-										else {
-											?>
-											<i><a href="recherche.php?id=<?php echo "%".$query_made.""?>&cat=<?php echo 'aucun' ?>">Voir la suite des résultats</a></i>
-											<?php
-										}
-							?>
+										<i><a href="recherche.php?id=<?php echo $query_made ?>&cat=<?php echo $categorie ?>">Voir la suite des résultats</a></i>
 										<br/>
 										<br/>
-										<a href="recherche.php">Faire une nouvelle recherche</a></p>
-							<?php
+							<?php 
 									}
+							?>	
+									<a href="recherche.php">Faire une nouvelle recherche</a></p>
+							<?php
 								} else {
 							?>
 									<h3>Pas de résultats</h3>
 									<p>Nous n'avons trouvé aucun résultat pour votre requète "<?php echo htmlspecialchars($_POST['requete']); ?>". <a href="recherche.php">Réessayez</a> avec autre chose.</p>
 									<a href="?page=entrer_liste"><img src="images/orange button.png" alt="enter liste" /></a>						
 							<?php
-								}// Fini d'afficher l'erreur ^^
+								}
 							} else { // et voilà le formulaire, en HTML de nouveau !
 							?>
 								<a href="?page=entrer_liste"><img src="images/orange button.png" alt="enter liste" /></a>
@@ -125,7 +117,7 @@ function createListeSelectLangue(){
 										Catégorie?	
 										<select id="categorie" name="categorie"></select>
 										<br><br>
-										<input type="text" name="requete" value="Mots-clés" size="30" title="Mots-cl�s" >
+										<input type="text" name="requete" value="Mots-clés" size="30" title="Mots-clés" >
 										<br><br>
 										<input type="submit" value="Recherche">
 									</p>
@@ -140,11 +132,10 @@ function createListeSelectLangue(){
 							<h3><a href="gerer_public.php"><?php echo $defaultNbListe?> derniers ajouts</a></h3>					
 							<ul type="circle">
 							<?php
-								$listesMots = getListesMotDefinition($defaultNbListe);
-								$sql = mysql_query("SELECT * FROM listes_public ORDER BY id DESC LIMIT 3");
-								while($requete = mysql_fetch_array($sql)) {
+								$listeMotArray = getListesMotDefinition($defaultNbListe);
+								foreach($listeMotArray as $listeMot) {
 							?>
-									<li><b><?php echo $requete['categorie'] ?> <-> <?php echo $requete['categorie2'] ?>: </b><br /><a href="afficher.php?id=<?php echo $requete['id']; ?>"><?php echo $requete['titre'] ?></a> <small>par <a href="profil.php?m=<?php echo $requete['pseudo']?>"><?php echo $requete['pseudo']?></a></small></li><br />
+									<li><b><?php echo $listeMot->categorie(); ?> -> <?php echo $listeMot->categorie2(); ?>: </b><br /><a href="afficher.php?id=<?php echo $listeMot->id(); ?>"><?php echo $listeMot->titre(); ?></a> <small>par <a href="profil.php?m=<?php echo $listeMot->membre(); ?>"><?php echo $listeMot->membre();?></a></small></li><br />
 							<?php } ?>
 							</ul>
 							<h3>Par thème</h3>

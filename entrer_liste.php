@@ -110,11 +110,11 @@ function getHTML_Etape2() {
 		$etape = "nonConnecte";
 	}
 ?>
-    <script language="javascript">
+    <script language="text/javascript">
 		$(function(){		
-		<?php 	
-			echo "var etape = '".$etape."';\n";
-		?>
+			<?php 	
+				echo "var etape = '".$etape."';\n";
+			?>
 			notRemoveContent(etape);
 			if(etape == "nonConnecte"){
 				$('#nonConnecte').show();

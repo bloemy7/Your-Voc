@@ -46,21 +46,20 @@ function getConfigPage(){
 
 function getCategories($nb=0){
 	$manager = new CategorieManager(dbPDO());
-	$liste = $manager->getList();
-	if($nb > 0){
-		$liste = array_slice($liste ,0,$nb);		
-	}
-	return $liste;
+	return getLimiteListe($manager, $nb);
 }
 
 function getListesMotDefinition($nb=0){
 	$manager = new ListeMotDefinitionManager(dbPDO());
+	return getLimiteListe($manager, $nb);
+}
+
+function getLimiteListe($manager, $nb=0){
 	$liste = $manager->getList();
 	if($nb > 0){
-		$liste = array_slice($liste ,0,$nb);		
+		$liste = array_slice($liste ,0,$nb);
 	}
-	return $liste;
-	//$sql = mysql_query("SELECT * FROM listes_public ORDER BY id DESC LIMIT 3");
+	return $liste;	
 }
 
 function getPage(){
