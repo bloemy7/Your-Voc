@@ -53,7 +53,9 @@ function getMembre($login, $mdp){
 	$result = "Votre identifiant est inconnu, merci de vous inscrire pour vous connecter";
 	if(count($liste) == 1){
 		$result = $liste[0];
-		if(md5($mdp) != $liste[0]->pass()){
+		print_r(md5($mdp)." |||| <br>");
+		print_r($result);
+		if(md5($mdp) != $result->pass()){
 			$result = "Votre mot de passe est incorrect";
 		}
 	}else if(count($liste) > 1){

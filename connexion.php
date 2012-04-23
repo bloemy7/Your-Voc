@@ -67,8 +67,7 @@
 						else {
 							$erreur = 'Probème dans la base de données : plusieurs membres ont les mêmes identifiants de connexion.';
 						}
-					}
-					else {
+					} else {
 						$erreur = 'Au moins un des champs est vide.';
 					}
 				}
