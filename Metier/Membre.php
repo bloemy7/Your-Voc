@@ -14,6 +14,9 @@ class Membre extends Entity{
 	function id(){
 		return $this->id;
 	}
+	public function setId($p_id){
+		$this->id= $p_id;
+	}
 	
 	function login(){
 		return $this->login;
