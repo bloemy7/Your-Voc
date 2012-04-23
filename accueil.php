@@ -60,22 +60,6 @@ function createListeSelectLangue(){
 								}		
 								$critereListeMot = array("titre"=>$critere, "categorie"=>$categorie,"categorie2"=>$categorie);
 								$resultats = getListeMotByCritere($critereListeMot);
-								
-// 								$requete = htmlspecialchars(addslashes($_POST['requete'])); 
-// 								$requete = explode(" ", $requete);
-// 								$number = count($requete);
-// 								$query_made = "";
-// 								for( $i = 0 ; $i < $number ; $i++) {
-// 									$query_made .= $requete[$i];
-// 								}
-								
-// 								$query_made = "SELECT * FROM listes_public WHERE titre LIKE '%$query_made%' OR categorie LIKE '%$categorie%' OR categorie2 LIKE '%$categorie%' ORDER BY id DESC";
-// 								echo $query_made;
-// 								$query = mysql_query($query_made) or die (mysql_error());
-// 								$resultats = array();
-// 								while($row = mysql_fetch_assoc($query)){
-// 									$resultats[] = $row;
-// 								}
 								$nb_resultats = count($resultats); 
 								
 								if($nb_resultats > 0) {

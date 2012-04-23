@@ -52,7 +52,6 @@ class ListeMotDefinitionManager extends DbManager {
 			$query.=" or categorie2 like :categorie2";
 			$entityCritere->setCategorie2("%".$critere['categorie2']."%");
 		}
-		print_r($query);
 		return $this->select($query, $entityCritere);
 	}
 }

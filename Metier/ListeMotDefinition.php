@@ -1,6 +1,5 @@
 <?php
-class ListeMotDefinition{
-	private $id;
+class ListeMotDefinition extends Entity{
 	private $titre;
 	private $membre;
 	private $listeMot;// = array();	
@@ -29,6 +28,9 @@ class ListeMotDefinition{
 	
 	public function id(){
 		return $this->id;
+	}
+	public function setId($id){
+		$this->id = $id;
 	}
 	public function listeMot(){
 		return $this->listeMot;

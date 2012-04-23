@@ -11,31 +11,31 @@ class Membre extends Entity{
 		if(isset($donnees['email']))$this->email = $donnees['email'];
 	}
 	
-	function id(){
+	public function id(){
 		return $this->id;
 	}
 	public function setId($p_id){
 		$this->id= $p_id;
 	}
 	
-	function login(){
+	public function login(){
 		return $this->login;
 	}
-	function setLogin($login){
+	public function setLogin($login){
 		$this->login = $login;
 	}
 	
-	function email(){
+	public function email(){
 		return $this->email;
 	}
-	function setEmail($email){
+	public function setEmail($email){
 		$this->email = $email;
 	}
 	
-	function pass(){
+	public function pass(){
 		return $this->pass;
 	}
-	function setPass($pass){
+	public function setPass($pass){
 		$this->pass = $pass;
 	}
 }

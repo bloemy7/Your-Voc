@@ -2,6 +2,6 @@
 abstract class Entity {
 	protected $id;
 	abstract public function id();
-	abstract public function setId();
+	abstract public function setId($p_id);
 }
 ?>
