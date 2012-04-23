@@ -1,5 +1,6 @@
 <?php
-class Categorie extends Entity{
+class Categorie{
+	private $id;
 	private $name;
 	private $groupe;
 	private $url;

@@ -7,7 +7,7 @@ class Membre extends Entity{
 	function __construct(array $donnees){
 		if(isset($donnees['id']))$this->id = $donnees['id'];
 		if(isset($donnees['login']))$this->login = $donnees['login'];
-		if(isset($donnees['pass']))$this->pass = md5($donnees['login']);
+		if(isset($donnees['pass_md5']))$this->pass = md5($donnees['pass_md5']);
 		if(isset($donnees['email']))$this->email = $donnees['email'];
 	}
 	
