@@ -1,57 +1,108 @@
 <?php
-class DbManager {
-	private $_db; // Instance de PDO
-	private $arrayBinding;
+abstract class DbManager {
+	protected $_db; // Instance de PDO
+	protected $arrayBinding;
+	protected $table;
+	protected $entityName;
+	protected $ID_COLUMN;
 	
-	public function __construct($db){
-		$this->setDb($db);
+	protected function __construct(){
+		$this->init();
 	}
 	
-	public function add(Categorie $categorie){
-		$q = $this->_db->prepare("INSERT INTO ".$this->table." SET categorie = :nom, url = :url, general = :groupe");		
-		$q->bindValue(':nom', $categorie->nom());
-		$q->bindValue(':url', $categorie->url());
-		$q->bindValue(':groupe', $categorie->groupe());		
-		$q->execute();
+	private function init(){
+		$this->setDb(dbPDO());
+		$this->binding();
+		DBHelper::addManager($this);
 	}
 	
-	public function getNbListeByCategorie($nomCategorie){
-		$result = mysql_query("SELECT * FROM listes_public WHERE categorie = '$nomCategorie' OR categorie2 = '$nomCategorie'")or die(mysql_error());
-		return mysql_num_rows($result);
+	abstract protected function newInstanceEntity($donnees);
+	abstract protected function binding();
+	
+	public function getID_COLUMN(){
+		return $ID_COLUMN;
 	}
 	
-	public function delete(Categorie $categorie){
-		$this->_db->exec('DELETE FROM '.$this->table.' WHERE id = '.$categorie->id());
-	}
-	
-	public function get($id){
-		$id = (int) $id;		
-		$q = $this->_db->query('SELECT id, categorie, url, general FROM '.$this->table.' WHERE id = '.$id);
-		$donnees = $q->fetch(PDO::FETCH_ASSOC);		
-		return new Categorie($donnees);
-	}
-	
-	public function getList(){
-		$categories = array();		
-		$q = $this->_db->query('SELECT id, categorie, url, general FROM '.$this->table);		
-		while ($donnees = $q->fetch(PDO::FETCH_ASSOC)){			
-			$donnees['nbListe'] = $this->getNbListeByCategorie($donnees['categorie']);
-			$categories[] = new Categorie($donnees);
-		}
-		return $categories;
-	}
-	
-	public function update(Categorie $categorie){
-		$q = $this->_db->prepare('UPDATE '.$this->table.' SET categorie = :nom, url = :url, general = :groupe, experience = :experience WHERE id = :id');		
-		$q->bindValue(':nom', $categorie->nom(), PDO::PARAM_INT);
-		$q->bindValue(':url', $categorie->url(), PDO::PARAM_INT);
-		$q->bindValue(':groupe', $categorie->groupe(), PDO::PARAM_INT);
-		$q->bindValue(':id', $categorie->id(), PDO::PARAM_INT);		
-		$q->execute();
+	public function getEntityName(){
+		return $this->entityName;
 	}
 	
 	public function setDb(PDO $db){
 		$this->_db = $db;
+	}
+	
+	protected function select($query, $entity){
+		$statement = $this->bind($query, $entity);
+		$donnees = $statement->execute();
+		$entityListe = array();
+		print_r($query);
+		while ($donnees = $statement->fetch(PDO::FETCH_ASSOC)){
+			$entityListe[] = $this->newInstanceEntity($donnees);
+		}
+		
+		return $entityListe;
+	}
+	
+	protected function count($query, $entity){
+		return sizeof($this->select($query, $entity));
+	}
+	
+	private function saveOrUpdate($query){
+		$statment = bind($query, $entity);
+		$statement->execute();
+	}
+	
+	public function delete($entity){
+		$query = "DELETE FROM ".$this->table." WHERE $ID_COLUMN = :id".$entity->id();
+		$this->_db->exec($query);
+	}
+	
+	public function bind($query, $entity){	
+		preg_match_all('#\s?:\s?[a-zA-Z0-9]+\s?#', $query, $explodeQ);
+		$explodeQuery = $explodeQ[0];
+		$bindingArrayQuery = array();
+		foreach($explodeQuery as $partQuery){		
+			$bindingArrayQuery[] = str_replace(" ", "",$partQuery);
+		}
+		$statement = $this->_db->prepare($query);	
+		foreach($bindingArrayQuery as $binder){
+			$methodeName = $this->arrayBinding[str_replace(":", "",$binder)];
+			$value = call_user_func(array($entity, $methodeName));
+			$statement->bindValue($binder, $value);
+		}
+		return $statement;
+	}
+	
+	public function add($entity){
+		$queryAsString = "INSERT INTO ".$this->table." SET ";
+		$i = 0;		
+		$arrayBind = $this->$arrayBinding;
+		$length = count($arrayBind);
+		foreach ($arrayBind as $key=>$binding){
+			$queryAsString.="$key = :$key";
+			if($i<$length){
+				$queryAsString.= ",";
+			}
+		}
+		$this->saveOrUpdate($query);
+	}
+	
+	public function get($id){
+		$id = (int)$id;		
+		$query = "SELECT * FROM ".$this->table." WHERE $ID_COLUMN = :id";	
+		$entityListe = select($query, newInstanceEntity(array("id"=>$id)));
+		return $entityListe[0];
+	}
+	
+	public function getList(){
+		$query = "SELECT * FROM ".$this->table;	
+		return $this->select($query, null);
+	}
+	
+	public function update($entity){
+		$query = "UPDATE $this->table SET ";
+		$this->setValuesQuery($query, $entity);
+		$this->saveOrUpdate($query);
 	}
 }
 ?>

@@ -1,60 +1,59 @@
 <?php
-class ListeMotDefinitionManager {
-	private $_db; // Instance de PDO
-	private $table = "listes_public";
+class ListeMotDefinitionManager extends DbManager {
+	protected $ID_COLUMN = "id";
+	protected $table = "listes_public";
+	protected $entityName = "ListeMotDefinition";
 	
-	public function __construct($db){
-		$this->setDb($db);
+	public function __construct(){
+		parent::__construct();
 	}
 	
-	public function add(ListeMotDefinition $listeMotDefinition){
-		$q = $this->_db->prepare("INSERT INTO ".$this->table." SET categorie = :nom, url = :url, general = :groupe");		
-		$q->bindValue(':titre', $listeMotDefinition->titre());
-		$q->bindValue(':liste', $listeMotDefinition->listeMot());
-		$q->bindValue(':date', $listeMotDefinition->date());
-		$q->bindValue(':categorie', $listeMotDefinition->categorie());
-		$q->bindValue(':categorie2', $listeMotDefinition->categorie2());
-		$q->bindValue(':note', $listeMotDefinition->note());
-		$q->bindValue(':vues', $listeMotDefinition->vue());
-		$q->bindValue(':commentaire', $listeMotDefinition->commentaire());
-		$q->execute();
+	protected function binding(){
+		$this->arrayBinding["id"] = "id";
+		$this->arrayBinding["titre"] = "titre";
+		$this->arrayBinding["liste"] = "listeMot";
+		$this->arrayBinding["date"] = "date";
+		$this->arrayBinding["categorie"] = "categorie";
+		$this->arrayBinding["categorie2"] = "categorie2";
+		$this->arrayBinding["note"] = "note";
+		$this->arrayBinding["vues"] = "vue";
+		$this->arrayBinding["commentaire"] = "commentaire";
 	}
 	
-	public function delete(ListeMotDefinition $listeMotDefinition){
-		$this->_db->exec('DELETE FROM '.$this->table.' WHERE id = '.$categorie->id());
-	}
-	
-	public function get($id){
-		$id = (int) $id;		
-		$q = $this->_db->query('SELECT * FROM '.$this->table.' WHERE id = '.$id);
-		$donnees = $q->fetch(PDO::FETCH_ASSOC);		
+	protected function newInstanceEntity($donnees){
 		return new ListeMotDefinition($donnees);
 	}
 	
-	public function getList(){
-		$listeMotDefinition = array();		
-		$q = $this->_db->query('SELECT * FROM '.$this->table);		
-		while ($donnees = $q->fetch(PDO::FETCH_ASSOC)){			
-			$listeMotDefinition[] = new ListeMotDefinition($donnees);
+	public function getListeByKeyWord($keyWord){
+		$requete = explode(" ", $requete);
+		$query = "Select * from ".$this.table." where ";
+		return $this->select($query);
+	}
+	
+	public function getNbListeByCategorie($nomCategorie){
+		$query = "SELECT * FROM ".$this->table." WHERE categorie = :categorie OR categorie2 = :categorie2";
+		$entity = $this->newInstanceEntity(array("categorie"=>$nomCategorie, "categorie2"=>$nomCategorie));	
+		return $this->count($query, $entity);
+	}
+	
+	public function getListeByCritere($critere){
+		$query = "SELECT * FROM ".$this->table." WHERE ";
+		$datas = array();		
+		$entityCritere = new ListeMotDefinition(array());
+		if(isset($critere['titre'])){
+			$query.="titre like :titre";
+			$entityCritere->setTitre("%".$critere['titre']."%");
 		}
-		return $listeMotDefinition;
-	}
-	
-	public function update(ListeMotDefinition $listeMotDefinition){
-		$q = $this->_db->prepare('UPDATE '.$this->table.' SET titre = :titre, liste = :liste, categorie = :categorie, categorie2 = :categorie2, date = :date, note = : vue = :vue, note = :note, commentaire=:commentaire WHERE id = :id');		
-		$q->bindValue(':titre', $listeMotDefinition->nom());
-		$q->bindValue(':liste', $listeMotDefinition->listeMot(), PDO::PARAM_STR);
-		$q->bindValue(':categorie', $listeMotDefinition->categorie(), PDO::PARAM_STR);
-		$q->bindValue(':categorie2', $listeMotDefinition->categorie2(), PDO::PARAM_STR);
-		$q->bindValue(':date', $listeMotDefinition->date(), PDO::PARAM_STR);		
-		$q->bindValue(':vue', $listeMotDefinition->vue(), PDO::PARAM_STR);
-		$q->bindValue(':note', $listeMotDefinition->note(), PDO::PARAM_STR);
-		$q->bindValue(':commentaire', $listeMotDefinition->commentaire(), PDO::PARAM_STR);
-		$q->execute();
-	}
-	
-	public function setDb(PDO $db){
-		$this->_db = $db;
+		if(isset($critere['categorie'])){
+			$query.=" or categorie like :categorie";
+			$entityCritere->setCategorie("%".$critere['categorie']."%");
+		}
+		if(isset($critere['categorie2'])){
+			$query.=" or categorie2 like :categorie2";
+			$entityCritere->setCategorie2("%".$critere['categorie2']."%");
+		}
+		print_r($query);
+		return $this->select($query, $entityCritere);
 	}
 }
 ?>

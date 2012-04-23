@@ -1,14 +1,22 @@
 <?php
+require "/Metier/DBHelper.php";
+require "/Metier/Entity.php";
+require "/Metier/DbManager.php";
 require "/Metier/Categorie.php";
 require "/Metier/CategorieManager.php";
 require "/Metier/ListeMotDefinition.php";
 require "/Metier/ListeMotDefinitionManager.php";
+require "/Metier/Membre.php";
+require "/Metier/MembreManager.php";
+
+
 
 function dbconnect(){
+	dbConfiguration();
     static $connect = null;
     if ($connect === null) {
 		$connect = mysql_connect (getProperty('db.host.name'), getProperty('db.user.name'), getProperty('db.user.mdp'));
--		mysql_select_db (getProperty('db.name'));
+		mysql_select_db (getProperty('db.name'));
     }
     return $connect;
 }
@@ -20,6 +28,12 @@ function dbPDO(){
 		$connect = new PDO($dbhost, getProperty('db.user.name'), getProperty('db.user.mdp'));
     }
     return $connect;
+}
+
+function dbConfiguration(){
+	DBHelper::addManager(new CategorieManager());
+	DBHelper::addManager(new ListeMotDefinitionManager());
+	DBHelper::addManager(new MembreManager());
 }
 
 function getProperty($propertyName){
@@ -34,6 +48,19 @@ function getProperty($propertyName){
 	return $props[$propertyName];
 }
 
+function getMembre($login, $mdp){
+	$liste = DBHelper::getDBManager("Membre")->getMembre($login);
+	$result = "Votre identifiant est inconnu, merci de vous inscrire pour vous connecter";
+	if(count($liste) == 1){
+		$result = $liste[0];
+		if(md5($mdp) != $liste[0]->pass()){
+			$result = "Votre mot de passe est incorrect";
+		}
+	}else if(count($liste) > 1){
+		$result = "Une erreur dans notre base est surevenu plusieur membres porte le même login. Merci de contacter l'administrateur du site.";
+	}
+	return $result;
+}
 
 function getConfigPage(){
 	$configPage = new ConfigPage();
@@ -44,14 +71,28 @@ function getConfigPage(){
 	return $configPage;
 }
 
+
+
+function getCategoriesWithNbListe($nb=0){
+	$categories = getCategories($nb);
+	$managerListeMot = DBHelper::getDBManager("ListeMotDefinition");
+	foreach($categories as $categorie){
+		$categorie->setNbListe($managerListeMot->getNbListeByCategorie($categorie->name()));
+	}
+	return $categories;
+}
+
 function getCategories($nb=0){
-	$manager = new CategorieManager(dbPDO());
-	return getLimiteListe($manager, $nb);
+	$categories = getLimiteListe(DBHelper::getDBManager("Categorie"), $nb);
+	return $categories;
 }
 
 function getListesMotDefinition($nb=0){
-	$manager = new ListeMotDefinitionManager(dbPDO());
-	return getLimiteListe($manager, $nb);
+	return getLimiteListe(DBHelper::getDBManager("ListeMotDefinition"), $nb);
+}
+
+function getListeMotByCritere(array $critere){
+	return DBHelper::getDBManager("ListeMotDefinition")->getListeByCritere($critere);
 }
 
 function getLimiteListe($manager, $nb=0){
@@ -77,68 +118,6 @@ function get_comment($news_id){
 }
 
 function insert_comment($comment){
-}
-
-
-
-class Mot{
-	private $mot;
-	private $traduction;
-	private $commentaire;
-	
-	public function __construct(){
-		$args = func_get_args(); 
-        $nbArgs = func_num_args(); 
-        if ($nbArgs == 3) { 
-        	callConstructor($this, "__construct3", $nbArgs, $args);
-        }else if($nbArgs == 1){
-        	$arg = $args[0];
-        	if(is_array($arg)){
-        		callConstructor($this, "__construct2", $nbArgs, $arg);
-        	}else if(is_string($arg)){
-        		call_user_func_array(array($this,"__construct1"), $arg);
-        	}
-        }
-    }       
-    
-    private function __construct1(String $motAsString){
-    	$indexEgal = strrpos($motAsString, "=");
-    	$indexCom = strrpos($motAsString, "{");
-    	$this->mot = substr($motAsString, $indexEgal);
-    	$this->traduction = substr($motAsString, $indexEgal, $indexCom);
-    	$this->commentaire = substr($motAsString, $indexCom , $strlen($motAsString));
-    }
-    
-    private function __construct2(array $motAsArray){
-    	if(isset($motAsArray['mot']))$this->mot = $motAsArray['mot'];
-    	if(isset($motAsArray['traduction']))$this->traduction = $motAsArray['traduction'];
-    	if(isset($motAsArray['commentaire']))$this->commentaire = $motAsArray['commentaire'];
-    }
-    
-    private function __construct3($mot, $traduction, $commentaire){
-    	$this->mot = $mot;
-    	$this->traduction = $traduction;
-    	$this->commentaire = $commentaire;
-    }
-	
-	public function mot(){
-		return $this->mot;
-	}
-	public function setMot($p_mot){
-		$this->mot = $p_mot;
-	}
-	public function traduction(){
-		return $this->traduction;
-	}
-	public function setTraduction($p_traduction){
-		$this->traduction = $p_traduction;
-	}
-	public function commentaire(){
-		return $this->commentaire;
-	}
-	public function setCommentaire($p_commentaire){
-		$this->commentaire = $p_commentaire;
-	}
 }
 
 function callConstructor($instance, $constructName, $nbArgs, $args){
@@ -176,10 +155,5 @@ class ConfigPage{
 		$this->metaContent = $p_metaContent;
 	}
 }
-
-class User{
-	
-}
-
 
 ?>

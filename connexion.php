@@ -8,7 +8,6 @@
             <div id="bloc">
 				<div id="title">Connexion</div>
 				<?php
-				echo "referer : ".$_SERVER['HTTP_REFERER'];
 				if(isset($_SESSION['login']))
 				{
 					header('Location: ?page=membre');
@@ -17,9 +16,10 @@
 				// on teste si le visiteur a soumis le formulaire de connexion
 				if (isset($_POST['connexion']) && $_POST['connexion'] == 'Connexion') {
 					if ((isset($_POST['login']) && !empty($_POST['login'])) && (isset($_POST['pass']) && !empty($_POST['pass']))) {
-
+						$membre = getMembre($_POST['login'], $_POST['pass']);
+						print_r($membre);
 						// on teste si une entrée de la base contient ce couple login / pass
-						$sql = 'SELECT count(*) FROM membre WHERE login="'.mysql_escape_string($_POST['login']).'" AND pass_md5="'.mysql_escape_string(md5($_POST['pass'])).'"';
+						$sql = 'SELECT count(*) FROM membre WHERE login="'.mysql_escape_string($_POST['login']).'test" AND pass_md5="'.mysql_escape_string(md5($_POST['pass'])).'"';
 						$req = mysql_query($sql) or die('Erreur SQL !<br />'.$sql.'<br />'.mysql_error());
 						$data = mysql_fetch_array($req);
 

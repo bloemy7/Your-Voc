@@ -36,38 +36,49 @@ function createListeSelectLangue(){
 						<h3>Catégories</h3>
 						<ul type="circle">
 							<?php
-								$allCat = getCategories(7);
+								$allCat = getCategoriesWithNbListe(7);
 								foreach($allCat as $key=>$cat) {
 							?>
-							<li><a href="<?php echo $cat->url() ?>"><?php echo  $cat->name() ?></a> - <i><?php echo $cat->nbListe() ?> listes </i></li><br />
-							<?php } ?>
+									<li><a href="<?php echo $cat->url() ?>"><?php echo  $cat->name() ?></a> - <i><?php echo $cat->nbListe() ?> listes </i></li><br />
+							<?php 
+								} 
+							?>
 						</ul>
 						<a href="categories.php">Plus de catégories</a><br /><br />
 					</div> 
 					<div id="col2outer"> 
 						<div id="col2mid"> 		
-							<?php			
-							if(isset($_POST['requete']) && $_POST['requete'] != NULL) {// on vérifie d'abord l'existence du POST et aussi si la requete n'est pas vide.
-								$requete = htmlspecialchars(addslashes($_POST['requete'])); // on crée une variable $requete pour faciliter l'�criture de la requète SQL, mais aussi pour empécher les éventuels malins qui utiliseraient du PHP ou du JS, avec la fonction htmlspecialchars().
-								$requete = explode(" ", $requete);
-								$number = count($requete);
-								$query_made = "";
-								for( $i = 0 ; $i < $number ; $i++) {
-									$query_made .= $requete[$i];
-								}
+							<?php
+							
+							if(isset($_POST['requete'])) {
+								$critere = $_POST['requete'];
 								$categorie = "aucun";
 								if($_POST['categorie'] != 'aucun') {
 									$categorie = $_POST['categorie'];
 								} else {
-									$categorie = $query_made;
-								}
-								$query_made = "SELECT * FROM listes_public WHERE titre LIKE '%$query_made%' OR categorie LIKE '%$categorie%' OR categorie2 LIKE '%$categorie%' ORDER BY id DESC";
-								$query = mysql_query($query_made) or die (mysql_error());
-								$resultats = mysql_fetch_array($query);
+									$categorie = $critere;
+								}		
+								$critereListeMot = array("titre"=>$critere, "categorie"=>$categorie,"categorie2"=>$categorie);
+								$resultats = getListeMotByCritere($critereListeMot);
+								
+// 								$requete = htmlspecialchars(addslashes($_POST['requete'])); 
+// 								$requete = explode(" ", $requete);
+// 								$number = count($requete);
+// 								$query_made = "";
+// 								for( $i = 0 ; $i < $number ; $i++) {
+// 									$query_made .= $requete[$i];
+// 								}
+								
+// 								$query_made = "SELECT * FROM listes_public WHERE titre LIKE '%$query_made%' OR categorie LIKE '%$categorie%' OR categorie2 LIKE '%$categorie%' ORDER BY id DESC";
+// 								echo $query_made;
+// 								$query = mysql_query($query_made) or die (mysql_error());
+// 								$resultats = array();
+// 								while($row = mysql_fetch_assoc($query)){
+// 									$resultats[] = $row;
+// 								}
 								$nb_resultats = count($resultats); 
 								
-								if($nb_resultats > 0) {// si le nombre de résultats est supèrieur à 0, on continue
-								// maintenant, on va afficher les r�sultats et la page qui les donne ainsi que leur nombre, avec un peu de code HTML pour faciliter la t�che.
+								if($nb_resultats > 0) {
 									$writeResult = "";
 									if($nb_resultats < 6) {
 										$writeResult = "<br>Voici les listes que nous avons trouvées :<br />";
@@ -82,18 +93,16 @@ function createListeSelectLangue(){
 									<?php echo $writeResult;?>
 									<br/><br/>
 							<?php
-									$i = 1;
 									foreach($resultats as $resultat){
-										echo $i.". ";
+										echo ($key+1).". " ;
 							?>
-										<a href="afficher.php?id=<?php echo $resultat['id']; ?>"></i><? echo $resultat['titre']; ?></a> <small>entré le <?php echo $resultat['date'] ?> par <?php echo $resultat['pseudo']; ?> dans les catégories <?php echo $resultat['categorie'] ?> <-> <?php echo $resultat['categorie2'] ?> (<?php echo $resultat['note'] ?>/5)</small><br /><br />
+										<a href="afficher.php?id=<?php echo $resultat->id(); ?>"><?php echo $resultat->titre(); ?></a> <small>entré le <?php echo $resultat->date(); ?> par <?php echo $resultat->membre(); ?> dans les catégories <?php echo $resultat->categorie(); ?> <-> <?php echo $resultat->categorie2() ?> (<?php echo $resultat->note() ?>/5)</small><br /><br />
 							<?php
-										$i++;
 									} // fin de la boucle
 									
 									if($nb_resultats > 5) {
 							?>
-										<i><a href="recherche.php?id=<?php echo $query_made ?>&cat=<?php echo $categorie ?>">Voir la suite des résultats</a></i>
+										<i><a href="recherche.php?id=<?php echo $critere ?>&cat=<?php echo $categorie ?>">Voir la suite des résultats</a></i>
 										<br/>
 										<br/>
 							<?php 
@@ -104,7 +113,7 @@ function createListeSelectLangue(){
 								} else {
 							?>
 									<h3>Pas de résultats</h3>
-									<p>Nous n'avons trouvé aucun résultat pour votre requète "<?php echo htmlspecialchars($_POST['requete']); ?>". <a href="recherche.php">Réessayez</a> avec autre chose.</p>
+									<p>Nous n'avons trouvé aucun résultat pour votre requète "<?php echo htmlspecialchars($critere); ?>". <a href="recherche.php">Réessayez</a> avec autre chose.</p>
 									<a href="?page=entrer_liste"><img src="images/orange button.png" alt="enter liste" /></a>						
 							<?php
 								}
