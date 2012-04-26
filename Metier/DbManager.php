@@ -20,7 +20,7 @@ abstract class DbManager {
 	abstract protected function binding();
 	
 	public function getID_COLUMN(){
-		return $ID_COLUMN;
+		return $this->ID_COLUMN;
 	}
 	
 	public function getEntityName(){
@@ -33,7 +33,7 @@ abstract class DbManager {
 	
 	protected function select($query, $entity){
 		$statement = $this->bind($query, $entity);
-		$donnees = $statement->execute();
+		$donnees = $statement->execute();		
 		$entityListe = array();
 		while ($donnees = $statement->fetch(PDO::FETCH_ASSOC)){
 			$entityListe[] = $this->newInstanceEntity($donnees);
@@ -46,13 +46,17 @@ abstract class DbManager {
 		return sizeof($this->select($query, $entity));
 	}
 	
-	private function saveOrUpdate($query){
-		$statment = bind($query, $entity);
-		$statement->execute();
+	private function saveOrUpdate($query, $entity){
+		$statement = $this->bind($query, $entity);
+		$this->_db->beginTransaction();
+// 		$this->_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// 		$error = $this->_db->errorInfo();
+// 		$result = $statement->execute();
+		return $statement->execute();
 	}
 	
 	public function delete($entity){
-		$query = "DELETE FROM ".$this->table." WHERE $ID_COLUMN = :id".$entity->id();
+		$query = "DELETE FROM ".$this->table." WHERE $ID_COLUMN = :$ID_COLUMN".$entity->id();
 		$this->_db->exec($query);
 	}
 	
@@ -73,17 +77,25 @@ abstract class DbManager {
 	}
 	
 	public function add($entity){
-		$queryAsString = "INSERT INTO ".$this->table." SET ";
-		$i = 0;		
-		$arrayBind = $this->$arrayBinding;
+		$query = "INSERT INTO ".$this->table;
+		$i = 1;		
+		$arrayBind = $this->arrayBinding;
 		$length = count($arrayBind);
+		$columns = "";
+		$values = "";
 		foreach ($arrayBind as $key=>$binding){
-			$queryAsString.="$key = :$key";
-			if($i<$length){
-				$queryAsString.= ",";
+			if($key != $this->ID_COLUMN){
+				$columns.= $key ;
+				$values.= ":".$key;
+				if($i < $length){
+					$columns.= "," ;
+					$values.= ",";
+				}
 			}
+			$i++;
 		}
-		$this->saveOrUpdate($query);
+		$query.= " ($columns) values ($values)";
+		return $this->saveOrUpdate($query, $entity);
 	}
 	
 	public function get($id){

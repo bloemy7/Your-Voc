@@ -125,10 +125,10 @@ function createListeSelectLangue(){
 							<h3><a href="gerer_public.php"><?php echo $defaultNbListe?> derniers ajouts</a></h3>					
 							<ul type="circle">
 							<?php
-								$listeMotArray = getListesMotDefinition($defaultNbListe);
+								$listeMotArray = getListesMotDefinitionByDate($defaultNbListe);								
 								foreach($listeMotArray as $listeMot) {
 							?>
-									<li><b><?php echo $listeMot->categorie(); ?> -> <?php echo $listeMot->categorie2(); ?>: </b><br /><a href="afficher.php?id=<?php echo $listeMot->id(); ?>"><?php echo $listeMot->titre(); ?></a> <small>par <a href="profil.php?m=<?php echo $listeMot->membre(); ?>"><?php echo $listeMot->membre();?></a></small></li><br />
+									<li><b><?php echo $listeMot->categorie(); ?> -> <?php echo $listeMot->categorie2(); ?>: </b><br /><a href="afficher.php?id=<?php echo $listeMot->id(); ?>"><?php echo $listeMot->titre(); ?></a> <small>par <a href="profil.php?m=<?php echo $listeMot->membre(); ?>"><?php echo $listeMot->membre();?></a></small></li>
 							<?php } ?>
 							</ul>
 							<h3>Par thème</h3>

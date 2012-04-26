@@ -9,8 +9,6 @@ require "/Metier/ListeMotDefinitionManager.php";
 require "/Metier/Membre.php";
 require "/Metier/MembreManager.php";
 
-
-
 function dbconnect(){
 	dbConfiguration();
     static $connect = null;
@@ -49,17 +47,24 @@ function getProperty($propertyName){
 }
 
 function getMembre($login, $mdp){
-	$liste = DBHelper::getDBManager("Membre")->getMembre($login);
-	$result = "Votre identifiant est inconnu, merci de vous inscrire pour vous connecter";
-	if(count($liste) == 1){
-		$result = $liste[0];
-		print_r(md5($mdp)." |||| <br>");
-		print_r($result);
-		if(md5($mdp) != $result->pass()){
-			$result = "Votre mot de passe est incorrect";
+	$result = "";
+	if(empty($login)){
+		$result = "Vous devez renseigner votre login.";
+	}
+	if(empty($mdp)){
+		$result .= "Vous devez renseigner votre mot de passe.";
+	}
+	if(empty($result)){
+		$liste = DBHelper::getDBManager("Membre")->getMembre($login);
+		$result = "Votre identifiant est inconnu, merci de vous inscrire pour vous connecter";
+		if(count($liste) == 1){
+			$result = $liste[0];
+			if(md5($mdp) != $result->pass()){
+				$result = "Votre mot de passe est incorrect";
+			}
+		}else if(count($liste) > 1){
+			$result = "Une erreur dans notre base est surevenu plusieur membres porte le même login. Merci de contacter l'administrateur du site.";
 		}
-	}else if(count($liste) > 1){
-		$result = "Une erreur dans notre base est surevenu plusieur membres porte le même login. Merci de contacter l'administrateur du site.";
 	}
 	return $result;
 }
@@ -73,7 +78,19 @@ function getConfigPage(){
 	return $configPage;
 }
 
-
+function insertListeMot($login, $listeMots, $titre, $date, $categorie, $categorie2, $commentaire, $vues, $note){
+	$listeMot = new ListeMotDefinition();
+	$listeMot->setMembre($login);
+	$listeMot->setListeMot($listeMots);
+	$listeMot->setTitre($titre);
+	$listeMot->setDate($date);
+	$listeMot->setCategorie($categorie);
+	$listeMot->setCategorie2($categorie2);
+	$listeMot->setCommentaire($commentaire);
+	$listeMot->setNote($note);
+	$listeMot->setVue($vues);
+	return DBHelper::getDBManager("ListeMotDefinition")->add($listeMot);
+}
 
 function getCategoriesWithNbListe($nb=0){
 	$categories = getCategories($nb);
@@ -89,8 +106,22 @@ function getCategories($nb=0){
 	return $categories;
 }
 
-function getListesMotDefinition($nb=0){
-	return getLimiteListe(DBHelper::getDBManager("ListeMotDefinition"), $nb);
+function getListesMotDefinitionByDate($nb=0){
+	$liste = DBHelper::getDBManager("ListeMotDefinition")->getList();
+	usort($liste, function($a, $b) {
+	    return $a->id() < $b->id() ? 1 : -1;
+	});
+	if($nb > 0){
+		$liste = array_slice($liste ,0,$nb);
+	}
+	return $liste;
+}
+
+function comparator($a, $b){
+	if ($a == $b) {
+		return 0;
+	}
+	return ($a < $b) ? -1 : 1;
 }
 
 function getListeMotByCritere(array $critere){

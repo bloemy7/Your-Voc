@@ -9,7 +9,8 @@ class ListeMotDefinitionManager extends DbManager {
 	}
 	
 	protected function binding(){
-		$this->arrayBinding["id"] = "id";
+		$this->arrayBinding[$this->ID_COLUMN] = "id";
+		$this->arrayBinding["pseudo"] = "membre";
 		$this->arrayBinding["titre"] = "titre";
 		$this->arrayBinding["liste"] = "listeMot";
 		$this->arrayBinding["date"] = "date";
@@ -21,7 +22,26 @@ class ListeMotDefinitionManager extends DbManager {
 	}
 	
 	protected function newInstanceEntity($donnees){
-		return new ListeMotDefinition($donnees);
+		$entity = new ListeMotDefinition();
+		if(isset($donnees['id']))$entity->setId($donnees['id']);
+		if(isset($donnees['titre']))$entity->setTitre($donnees['titre']);
+		if(isset($donnees['pseudo']))$entity->setMembre($donnees['pseudo']);
+		if(isset($donnees['date'])){
+			if(!preg_match("(.*\s2[0-9]{3])", $donnees['date'])){
+				$donnees['date'] .=  "2012";
+			}
+			$entity->setDate($donnees['date']);
+		}
+		if(isset($donnees['liste'])){
+			//$this->listeMot = explode($separator, $donnees['listeMot']);
+			$entity->setListeMot($donnees['liste']);
+		}
+		if(isset($donnees['categorie']))$entity->setCategorie($donnees['categorie']);
+		if(isset($donnees['categorie2']))$entity->setCategorie2($donnees['categorie2']);
+		if(isset($donnees['note']))$entity->setNote($donnees['note']);
+		if(isset($donnees['vue']))$entity->setVue($donnees['vue']);
+		if(isset($donnees['commentaire']))$entity->setCommentaire($donnees['commentaire']);
+		return $entity;
 	}
 	
 	public function getListeByKeyWord($keyWord){

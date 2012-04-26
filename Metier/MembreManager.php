@@ -11,7 +11,7 @@ class MembreManager extends DbManager{
 	protected function binding(){
 		$this->arrayBinding["login"] = "login";
 		$this->arrayBinding["email"] = "email";
-		$this->arrayBinding["pass"] = "pass_md5";
+		$this->arrayBinding["pass_md5"] = "pass";
 	}
 	
 	protected function newInstanceEntity($donnees){
