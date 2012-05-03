@@ -1,3 +1,16 @@
+<?php
+	$menuLink = array("accueil" => "Accueil", "gerer_public" => "Toutes les listes", "contact" => "Contact");	
+	if(isset($_SESSION['login'])) { 
+		$menuLink["membre"] = "Espace Membre";
+		$menuLink["gerer_listes"] = "Vos listes";
+		$menuLink["deconnexion"] = "Déconnexion";
+	} else { 
+		$menuLink["categories"] = "Catégories";
+		$menuLink["connexion"] = "Connexion";
+		$menuLink["inscription"] = "Inscription";
+	}
+?>
+		
 <!-- Début du header -->
 <div id="header">
 	<div id="logo">
@@ -5,21 +18,10 @@
 	</div>
 
 	<div id="menu">
-		<div id="url">		
-		<a href="?page=accueil">Accueil</a>
-		<?php if(isset($_SESSION['login'])) { ?>		
-		<a href="?page=membre">Espace Membre</a>
-		<a href="?page=gerer_listes">Vos listes</a>
-		<a href="?page=gerer_public">Toutes les listes</a>
-		<a href="?page=contact">Contact</a>
-		<a href="?page=deconnexion">Déconnexion</a>
-		 <?php } else { ?>
-		<a href="?page=gerer_public">Toutes les listes</a>
-		<a href="?page=categories">Catégories</a>
-		<a href="?page=connexion">Connexion</a>
-		<a href="?page=inscription">Inscription</a>
-		<a href="?page=contact">Contact</a>
-		<?php } ?>
+		<div id="url">
+			<?php foreach ($menuLink as $key=>$link) { ?>		
+				<a href="<?php echo $key;?>"><?php echo $link;?></a>
+			<?php } ?>
 		</div>
 	</div>
 </div>

@@ -31,7 +31,7 @@
 		<meta name="google-site-verification" content="pErt4j5t31fEifaia0V_gUs2DelP-DSnU0KxKdnvBnA" />
     </head>
 	<body>
-		<?php include("header.php"); ?>
+		<?php include("header.php");?>
 		
 		<?php include($configPage->pageName()); ?>
 				

@@ -15,7 +15,7 @@ function createListeSelectLangue(){
         <!-- Début de la présentation -->
         <div id="presentation">
             <div id="center">
-                <a href="?page=ccm"><img src="images/image.png" alt="Presentation" title="Your-Voc" class="desk"/></a>
+                <a href="ccm"><img src="images/image.png" alt="Presentation" title="Your-Voc" class="desk"/></a>
             </div>
         </div>
         <!-- Fin de la présentation -->
@@ -23,7 +23,7 @@ function createListeSelectLangue(){
         <!-- Début du contenu -->
         <div id="content">
             <div id="bloc">
-            <div id="title"><a href="?page=ccm">Your-Voc, c'est quoi ?</a> </div>
+            <div id="title"><a href="ccm">Your-Voc, c'est quoi ?</a> </div>
 				<p><h3>Avouez-le, vous l'avez tous connu. Un test arrive très rapidement, mais vous ne savez pas comment réviser et vous manquez de motivation.</h3>
 				Et bien, Your-Voc est fait pour vous. Créé par quelqu'un comme vous, pour vous, il vous aidera très facilement à apprendre votre vocabulaire sans y perdre des heures. Vous pouvez passer du temps sur l'ordinateur, Facebook et compagnie, et réviser en même temps. <br />
 				C'est une méthode déjà utilisée, testée et approuvée dans pleins d'autres pays, et elle débarque désormais en français pour vous, gratuitement.<br />
@@ -44,7 +44,7 @@ function createListeSelectLangue(){
 								} 
 							?>
 						</ul>
-						<a href="categories.php">Plus de catégories</a><br /><br />
+						<a href="categories">Plus de catégories</a><br /><br />
 					</div> 
 					<div id="col2outer"> 
 						<div id="col2mid"> 		
@@ -80,30 +80,30 @@ function createListeSelectLangue(){
 									foreach($resultats as $resultat){
 										echo ($key+1).". " ;
 							?>
-										<a href="afficher.php?id=<?php echo $resultat->id(); ?>"><?php echo $resultat->titre(); ?></a> <small>entré le <?php echo $resultat->date(); ?> par <?php echo $resultat->membre(); ?> dans les catégories <?php echo $resultat->categorie(); ?> <-> <?php echo $resultat->categorie2() ?> (<?php echo $resultat->note() ?>/5)</small><br /><br />
+										<a href="afficher?id=<?php echo $resultat->id(); ?>"><?php echo $resultat->titre(); ?></a> <small>entré le <?php echo $resultat->date(); ?> par <?php echo $resultat->membre(); ?> dans les catégories <?php echo $resultat->categorie(); ?> <-> <?php echo $resultat->categorie2() ?> (<?php echo $resultat->note() ?>/5)</small><br /><br />
 							<?php
 									} // fin de la boucle
 									
 									if($nb_resultats > 5) {
 							?>
-										<i><a href="recherche.php?id=<?php echo $critere ?>&cat=<?php echo $categorie ?>">Voir la suite des résultats</a></i>
+										<i><a href="recherche?id=<?php echo $critere ?>&cat=<?php echo $categorie ?>">Voir la suite des résultats</a></i>
 										<br/>
 										<br/>
 							<?php 
 									}
 							?>	
-									<a href="recherche.php">Faire une nouvelle recherche</a></p>
+									<a href="recherche">Faire une nouvelle recherche</a></p>
 							<?php
 								} else {
 							?>
 									<h3>Pas de résultats</h3>
 									<p>Nous n'avons trouvé aucun résultat pour votre requète "<?php echo htmlspecialchars($critere); ?>". <a href="recherche.php">Réessayez</a> avec autre chose.</p>
-									<a href="?page=entrer_liste"><img src="images/orange button.png" alt="enter liste" /></a>						
+									<a href="entrer_liste"><img src="images/orange button.png" alt="enter liste" /></a>						
 							<?php
 								}
 							} else { // et voilà le formulaire, en HTML de nouveau !
 							?>
-								<a href="?page=entrer_liste"><img src="images/orange button.png" alt="enter liste" /></a>
+								<a href="entrer_liste"><img src="images/orange button.png" alt="enter liste" /></a>
 								<b><h2>ou chercher une liste:</h2></b>
 								<form action="index.php" method="Post">
 									<p>
@@ -122,7 +122,7 @@ function createListeSelectLangue(){
 						</div> 
 						<div id="col2side">
 							<?php $defaultNbListe = 3; ?>
-							<h3><a href="gerer_public.php"><?php echo $defaultNbListe?> derniers ajouts</a></h3>					
+							<h3><a href="gerer_public"><?php echo $defaultNbListe?> derniers ajouts</a></h3>					
 							<ul type="circle">
 							<?php
 								$listeMotArray = getListesMotDefinitionByDate($defaultNbListe);								
@@ -133,10 +133,10 @@ function createListeSelectLangue(){
 							</ul>
 							<h3>Par thème</h3>
 							<ul type="circle">
-								<li><a href="?page=recherche&id=%sport%&cat=aucun">Le sport</a></li>
-								<li><a href="?page=recherche&id=%tourisme%&cat=aucun">Le tourisme - Les voyages</a></li>
-								<li><a href="?page=recherche&id=%restaurant%&cat=aucun">Le restaurant</a></li>
-								<li><a href="?page=recherche&id=%musique%&cat=aucun">La musique</a></li>
+								<li><a href="recherche?id=%sport%&cat=aucun">Le sport</a></li>
+								<li><a href="recherche?id=%tourisme%&cat=aucun">Le tourisme - Les voyages</a></li>
+								<li><a href="recherche?id=%restaurant%&cat=aucun">Le restaurant</a></li>
+								<li><a href="recherche?id=%musique%&cat=aucun">La musique</a></li>
 							</ul>
 						</div> 
 					</div>

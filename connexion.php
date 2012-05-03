@@ -1,6 +1,6 @@
 <?php
 if(isset($_SESSION['login'])) {
-	header('Location: ?page=membre');
+	header('Location: membre');
 	exit();
 }
 $login="";
