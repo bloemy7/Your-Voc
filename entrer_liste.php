@@ -58,7 +58,7 @@ function getHTML_Etape2() {
 			$html = 'time beug';
 		}
     }else {
-    	$html = getHTML_Etape1('Erreur : Aucun mot valide');
+    	$html = 'Erreur : Aucun mot valide';
     }
 
     return $html ;
@@ -131,7 +131,7 @@ function getHTML_Etape2() {
 				?>
 						Vous devez être connecté pour entrer une nouvelle liste.
 						<br />
-						<a href="?page=connexion">Cliquez-ici pour vous connecter ou vous inscrire!</a>
+						<a href="connexion">Cliquez-ici pour vous connecter ou vous inscrire!</a>
 				<?php 
 					}else if($etape == "etape1"){
 				?>
@@ -163,7 +163,6 @@ function getHTML_Etape2() {
 						echo $content;
 					}
 				?>	
-				</div>
 				</div>
 			</form>
             <br /><br />

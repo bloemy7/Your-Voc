@@ -69,6 +69,22 @@ function getMembre($login, $mdp){
 	return $result;
 }
 
+function getNombreListeMot(){
+	DBHelper::getDBManager("ListeMotDefinition")->countAll();
+}
+
+function getNombreMembre(){
+	DBHelper::getDBManager("Membre")->countAll();
+}
+
+function getNombreCategorie(){
+	DBHelper::getDBManager("Categorie")->countAll();
+}
+
+function getNombreRevision(){
+	DBHelper::getDBManager("Revision")->countAll();
+}
+
 function getConfigPage(){
 	$configPage = new ConfigPage();
 	$configPage->setPageName(getPage());

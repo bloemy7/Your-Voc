@@ -25,14 +25,10 @@
 					$retour3 = mysql_query("SELECT COUNT(*) AS nbre_entrees FROM revise" );
 					$donnees3 = mysql_fetch_array($retour3);
 				?>
-					<li><?php echo '<b>Listes disponibles</b>:   ';
-					echo '<i>'.$donnees['nbre_entrees'].'</i>';?></li>
-					<li><?php echo '   <b>Membres actifs</b>:   ';
-					echo '<i>'.$donnees1['nbre_entrees'].'</i>   ';?></li>
-					<li><?php echo '   <b>Nombre de catégories</b>:   ';
-					echo '<i>'.$donnees2['nbre_entrees'].'</i>   ';?></li>		
-					<li><?php echo '   <b>Nombre de révisions</b>:   ';
-					echo '<i>'.$donnees3['nbre_entrees'].'</i>   ';?></li>								
+					<li><b>Listes disponibles</b> : <i><?php echo $donnees['nbre_entrees'];?></i></li>
+					<li><b>Membres actifs</b> : <i><?php echo $donnees1['nbre_entrees'];?></i></li>
+					<li><b>Nombre de catégories</b> : <i><?php echo $donnees2['nbre_entrees'];?></i></li>
+					<li><b>Nombre de révisions</b> : <i><?php echo $donnees3['nbre_entrees'];?></i></li>							
 				</ul>
 			</div>
 			<div id="clear"></div>

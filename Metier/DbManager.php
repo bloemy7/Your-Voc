@@ -46,6 +46,12 @@ abstract class DbManager {
 		return sizeof($this->select($query, $entity));
 	}
 	
+	protected function countAll(){
+		$query = "select count(*) as nombre from ".$this->table;
+		$statement = $this->_db->prepare($query);
+		return $statement->execute()->fetchColumn();;
+	}
+	
 	private function saveOrUpdate($query, $entity){
 		$statement = $this->bind($query, $entity);
 		$this->_db->beginTransaction();
