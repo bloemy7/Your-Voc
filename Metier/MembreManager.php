@@ -18,9 +18,15 @@ class MembreManager extends DbManager{
 		return new Membre($donnees);
 	}
 	
-	public function getMembre($login){
+	public function getMembreByLogin($login){
 		$query = "select * from ".$this->table." where login = :login" ;
 		$entity = new Membre(array("login"=>$login));
+		return $this->select($query, $entity);
+	}
+	
+	public function getMembreById($id){
+		$query = "select * from ".$this->table." where id = :id" ;
+		$entity = new Membre(array("id"=>$id));
 		return $this->select($query, $entity);
 	}
 }

@@ -30,7 +30,7 @@
 							$liste = $resultat1['liste'];
 							echo "$y.Combinaison de $titre - "  
 					?>
-							<form method="post" action="?page=combiner"> 
+							<form method="post" action="combiner"> 
 								<input type="hidden" name="id" value="<?php echo $id ?>" />
 								<input type="hidden" name="liste1" value="<?php echo $liste ?>" />
 								<input type="hidden" name="id_combi" value="<?php echo $resultat1['id'] ?>" />
@@ -48,12 +48,12 @@
 					<div id="col2mid">
 						<p>
 							<h3>Bienvenue <?php echo htmlentities(trim($_SESSION['login'])); ?>!</h3>
-							<a href="?page=revise" >Réviser quelques mots sans créer une liste</a><br/>		
-							<a href="?page=gerer_listes" >Gerer et réviser ses listes</a><br/>			
-							<a href="?page=entrer_liste" >Entrer une nouvelle liste</a><br/>
-							<a href="?page=recherche" >Faire une recherche</a><br/>
-							<a href="?page=mdp">Modifier mon mot de passe</a><br/>
-							<a href="?page=deconnexion">Déconnexion</a><br/>
+							<a href="revise" >Réviser quelques mots sans créer une liste</a><br/>		
+							<a href="gerer_listes" >Gerer et réviser ses listes</a><br/>			
+							<a href="entrer_liste" >Entrer une nouvelle liste</a><br/>
+							<a href="recherche" >Faire une recherche</a><br/>
+							<a href="mdp">Modifier mon mot de passe</a><br/>
+							<a href="deconnexion">Déconnexion</a><br/>
 						</p>
 						<h3>3 dernières listes révisées</h3>
 						<?php
@@ -72,7 +72,7 @@
 									$query = mysql_query("SELECT * FROM listes_public WHERE id = '$id'");
 									$result = mysql_fetch_array($query);
 									$titre = $result['titre'];
-									$id_liste = '<a href="?page=afficher&id='.$id.'">'.$titre.'</a>';
+									$id_liste = '<a href="afficher?id='.$id.'">'.$titre.'</a>';
 								}
 								?><?php echo $i ?>. <?php echo $id_liste ?> - <b>Moyenne de la révision: <?php echo $resultat['moyenne'] ?>%</b> - <small>Revisé le <?php echo $resultat['date']?>. </small><br /><br /> <?php
 								$i++;
@@ -97,7 +97,7 @@
 								$requete_listes = mysql_query("SELECT * FROM listes_public WHERE id = '$liste'")or die(mysql_error());
 								while($rendu_listes = mysql_fetch_array($requete_listes)){
 									echo ''.$i.'. ';
-									?><a href="?page=afficher&id=<?php echo $rendu_listes['id'] ?>"><?php echo $rendu_listes['titre'] ?></a> - <small><?php echo $rendu_listes['categorie'] ?></small><br /><?php
+									?><a href="afficher?id=<?php echo $rendu_listes['id'] ?>"><?php echo $rendu_listes['titre'] ?></a> - <small><?php echo $rendu_listes['categorie'] ?></small><br /><?php
 									$i++;
 								}
 							}

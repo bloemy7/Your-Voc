@@ -15,10 +15,7 @@ if (isset($_POST['connexion']) && $_POST['connexion'] == 'Connexion') {
 			$_SESSION['login'] = $membre->login();
 			if(isset($_POST['auto'])) {
 				$_SESSION['id'] = $membre->id();
-				$navigateur = (!empty($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : '';
-				$hash_cookie = sha1('yes'.$membre->login().'set'.$membre->id().'treb'.$navigateur.'crac');			
-				setcookie( 'id', $_SESSION['id'], strtotime("+1 year"), '/');
-				setcookie('connexion_auto', $hash_cookie, strtotime("+1 year"), '/');
+				init($membre);
 			}
 			if(isset($_POST['ref'])) {
 				echo '<META HTTP-EQUIV=Refresh CONTENT="1; URL='.$_POST['ref'].'">';
@@ -42,7 +39,7 @@ if (isset($_POST['connexion']) && $_POST['connexion'] == 'Connexion') {
 	if(!isset($waitingText)){	
 ?>
 		<div id="formulaire">
-			<form action="?page=connexion" method="post" >
+			<form action="connexion" method="post" >
 				<p><label for="login">Login :</label>
 				<input type="text" name="login" value="<?php echo $login; ?>" /><br />
 				<label for="pass">Mot de passe :</label>

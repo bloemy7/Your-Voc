@@ -55,7 +55,7 @@ function getMembre($login, $mdp){
 		$result .= "Vous devez renseigner votre mot de passe.";
 	}
 	if(empty($result)){
-		$liste = DBHelper::getDBManager("Membre")->getMembre($login);
+		$liste = DBHelper::getDBManager("Membre")->getMembreByLogin($login);
 		$result = "Votre identifiant est inconnu, merci de vous inscrire pour vous connecter";
 		if(count($liste) == 1){
 			$result = $liste[0];
@@ -67,6 +67,10 @@ function getMembre($login, $mdp){
 		}
 	}
 	return $result;
+}
+
+function getMembreById($id){
+	$membre = DBHelper::getDBManager("Membre")->getMembreById($id);
 }
 
 function getNombreListeMot(){

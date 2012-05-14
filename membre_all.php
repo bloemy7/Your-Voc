@@ -23,7 +23,7 @@
 	$query = mysql_query("SELECT * FROM combiner WHERE pseudo = '$pseudo'");
 	$y = 1;
 	if(mysql_num_rows($query) == 0) {
-		echo 'Aucune combinaison créée. <br><a href="?page=gerer_public">Commencer maintenant</a>!';
+		echo 'Aucune combinaison créée. <br><a href="gerer_public">Commencer maintenant</a>!';
 	}
 	else {
 		while($resultat1 = mysql_fetch_array($query)) {
@@ -32,7 +32,7 @@
 			$liste = $resultat1['liste'];
 			echo "$y Combinaison de $titre - "
 	?>
-			<form method="post" action="?page=combiner"> 
+			<form method="post" action="combiner"> 
 				<input type="hidden" name="id" value="<?php echo $id ?>" />
 				<input type="hidden" name="liste1" value="<?php echo $liste ?>" />
 				<input type="hidden" name="id_combi" value="<?php echo $resultat1['id'] ?>" />
