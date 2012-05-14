@@ -28,6 +28,13 @@
 		return false;
 	}
 	
+	function isCookieValid($membre){
+		if(getHash($login, $id) == getHash($membre->login(), $membre->id())){
+			return true;
+		}
+		return false;
+	}
+	
 	function getNavigateur(){
 		return (!empty($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : '';
 	}

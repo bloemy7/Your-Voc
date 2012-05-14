@@ -116,7 +116,7 @@ function getCategoriesWithNbListe($nb=0){
 	$categories = getCategories($nb);
 	$managerListeMot = DBHelper::getDBManager("ListeMotDefinition");
 	foreach($categories as $categorie){
-		$categorie->setNbListe($managerListeMot->getNbListeByCategorie($categorie->name()));
+		$categorie->setNbListe($managerListeMot->getNbListeByCategorie($categorie->nom()));
 	}
 	return $categories;
 }

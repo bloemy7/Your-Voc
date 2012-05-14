@@ -9,7 +9,7 @@ class CategorieManager extends DbManager{
 	}
 	
 	protected function binding(){
-		$this->arrayBinding["categorie"] = "name";
+		$this->arrayBinding["categorie"] = "nom";
 		$this->arrayBinding["url"] = "url";
 		$this->arrayBinding["general"] = "general";
 	}

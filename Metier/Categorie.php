@@ -1,13 +1,13 @@
 <?php
 class Categorie extends Entity{
-	private $name;
+	private $nom;
 	private $groupe;
 	private $url;
 	private $nbListe;
 	
 	public function __construct(array $donnees){
 		if(isset($donnees['id']))$this->id = $donnees['id'];
-		if(isset($donnees['categorie']))$this->name = $donnees['categorie'];
+		if(isset($donnees['categorie']))$this->nom = $donnees['categorie'];
 		if(isset($donnees['url']))$this->url = $donnees['url'];
 		if(isset($donnees['general']))$this->groupe = $donnees['general'];
 		if(isset($donnees['nbListe']))$this->nbListe = $donnees['nbListe'];
@@ -19,11 +19,11 @@ class Categorie extends Entity{
 	public function setId($p_id){
 		$this->id= $p_id;
 	}
-	public function name(){
-		return $this->name;
+	public function nom(){
+		return $this->nom;
 	}
-	public function setName($p_name){
-		$this->name = $p_name;
+	public function setNom($p_nom){
+		$this->nom = $p_nom;
 	}
 	public function groupe(){
 		return $this->groupe;

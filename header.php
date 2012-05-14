@@ -31,17 +31,10 @@
 $id_auto = getIdCookie();
 if($id_auto != null){
 	$membre = getMembreById($id_auto);
-	
-	$requete = mysql_query('SELECT * FROM membre WHERE id="'.$id_auto.'"');
-	$infos_utilisateur = mysql_fetch_array($requete);
-
-	if (false !== $infos_utilisateur) {
-		$navigateur = (!empty($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : '';
-		$hash = sha1('yes'.$infos_utilisateur['login'].'set'.$infos_utilisateur['pass_md5'].'treb'.$navigateur.'crac');
-	
-		if ($_COOKIE['connexion_auto'] == $hash) {
+	if ($membre != null) {
+		if (isCookieValid($membre)) {
 			// On enregistre les informations dans la session
-			$_SESSION['login'] = $infos_utilisateur['login'];
+			$_SESSION['login'] = $membre->login();
 		}
 	}
 }
