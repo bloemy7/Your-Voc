@@ -17,6 +17,7 @@
 				<div id="col1">
 					<h3>Vos 5 dernières combinaisons</h3>
 					<?php
+					$testPush;
 					$pseudo = $_SESSION['login'];
 					$query = mysql_query("SELECT * FROM combiner WHERE pseudo = '$pseudo' ORDER BY id DESC LIMIT 5");
 					$y = 1;
