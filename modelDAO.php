@@ -125,6 +125,9 @@ function getCategories($nb=0){
 	$categories = getLimiteListe(DBHelper::getDBManager("Categorie"), $nb);
 	return $categories;
 }
+function getCategorieByName($name){
+	return $categories = DBHelper::getDBManager("Categorie")->getCategorieByName($name);
+}
 
 function getListesMotDefinitionByDate($nb=0){
 	$liste = DBHelper::getDBManager("ListeMotDefinition")->getList();

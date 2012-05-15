@@ -17,5 +17,11 @@ class CategorieManager extends DbManager{
 	protected function newInstanceEntity($donnees){
 		return new Categorie($donnees);
 	}
+	
+	public function getCategorieByName($name){
+		$query = "select * from ".$this->table." where categorie = :categorie" ;
+		$entity = new Categorie(array("categorie"=>$name));
+		return $this->select($query, $entity);
+	}
 }
 ?>
