@@ -37,8 +37,11 @@ abstract class DbManager {
 		$entityListe = array();
 		while ($donnees = $statement->fetch(PDO::FETCH_ASSOC)){
 			$entityListe[] = $this->newInstanceEntity($donnees);
+			
 		}
-		
+		if(count($entityListe) == 1){
+			return $entityListe[0] ;
+		}
 		return $entityListe;
 	}
 	
