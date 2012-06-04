@@ -1,4 +1,4 @@
 # Activation du module de réécriture d'URL :
 RewriteEngine On
 # redirection de l'accueil
-RewriteRule ^([_a-zA-Z0-9]+)$ index.php?page=$1
+RewriteRule ^([_a-zA-Z0-9]+)$ index.php?page=$1 [QSA]
