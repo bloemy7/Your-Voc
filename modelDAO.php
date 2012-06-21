@@ -58,7 +58,7 @@ function getMembre($login, $mdp){
 		$liste = DBHelper::getDBManager("Membre")->getMembreByLogin($login);
 		$result = "Votre identifiant est inconnu, merci de vous inscrire pour vous connecter";
 		if(count($liste) == 1){
-			$result = $liste[0];
+			$result = $liste;
 			if(md5($mdp) != $result->pass()){
 				$result = "Votre mot de passe est incorrect";
 			}
@@ -71,6 +71,16 @@ function getMembre($login, $mdp){
 
 function getMembreById($id){
 	$membre = DBHelper::getDBManager("Membre")->getMembreById($id);
+}
+
+function getMembreByLogin($login){
+	$membre = DBHelper::getDBManager("Membre")->getMembreByLogin($login);
+	return $membre;
+}
+
+function getMembreByEmail($email){
+	$membre = DBHelper::getDBManager("Membre")->getMembreByEmail($email);
+	return $membre;
 }
 
 function getNombreListeMot(){
@@ -124,9 +134,6 @@ function getCategoriesWithNbListe($nb=0){
 function getCategories($nb=0){
 	$categories = getLimiteListe(DBHelper::getDBManager("Categorie"), $nb);
 	return $categories;
-}
-function getCategorieByName($name){
-	return $categories = DBHelper::getDBManager("Categorie")->getCategorieByName($name);
 }
 
 function getListesMotDefinitionByDate($nb=0){
@@ -211,5 +218,20 @@ class ConfigPage{
 		$this->metaContent = $p_metaContent;
 	}
 }
-
+function getCategorieByName($name){
+	$categorie = DBHelper::getDBManager("Categorie")->getCategorieByName($name);
+	return $categorie;
+}
+function getCategorieById($id){
+	$categorie = DBHelper::getDBManager("Categorie")->getCategorieById($id);
+	return $categorie;
+}
+function getListeByPseudoLimit3($pseudo){
+	$liste = DBHelper::getDBManager("ListeMotDefinition")->getListeByPseudoLimit3($pseudo);
+	return $liste;
+}
+function getListeById($id){
+	$liste = DBHelper::getDBManager("ListeMotDefinition")->getListeById($id);
+	return $liste;
+}
 ?>

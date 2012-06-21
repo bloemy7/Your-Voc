@@ -39,7 +39,7 @@ class ListeMotDefinitionManager extends DbManager {
 		if(isset($donnees['categorie']))$entity->setCategorie($donnees['categorie']);
 		if(isset($donnees['categorie2']))$entity->setCategorie2($donnees['categorie2']);
 		if(isset($donnees['note']))$entity->setNote($donnees['note']);
-		if(isset($donnees['vue']))$entity->setVue($donnees['vue']);
+		if(isset($donnees['vues']))$entity->setVue($donnees['vues']);
 		if(isset($donnees['commentaire']))$entity->setCommentaire($donnees['commentaire']);
 		return $entity;
 	}
@@ -73,6 +73,18 @@ class ListeMotDefinitionManager extends DbManager {
 			$entityCritere->setCategorie2("%".$critere['categorie2']."%");
 		}
 		return $this->select($query, $entityCritere);
+	}
+	public function getListeByPseudoLimit3($pseudo){
+		$query = "select * from ".$this->table." where pseudo = :pseudo ORDER BY id DESC LIMIT 3";
+		$entity = new ListeMotDefinition();
+		$entity->setMembre($pseudo);
+		return $this->select($query, $entity);
+	}
+	public function getListeById($id){
+		$query = "select * from ".$this->table." where id = :id";
+		$entity = new ListeMotDefinition();
+		$entity->setId($id);
+		return $this->select($query, $entity);		
 	}
 }
 ?>

@@ -60,10 +60,14 @@
 				}
 				else {
 					$id = $resultat['id_liste'];
-					$query = mysql_query("SELECT * FROM listes_public WHERE id = '$id'");
-					$result = mysql_fetch_array($query);
-					$titre = $result['titre'];
-					$id_liste = '<a href="?page=afficher&id='.$id.'">'.$titre.'</a>';
+					if(empty($id)){
+						$id_liste = 'Mots entrés par vous pour une utilisation unique';
+					}
+					else {
+						$query = getListeById($id);
+						$titre = $query->titre();
+						$id_liste = '<a href="afficher?id='.$id.'">'.$titre.'</a>';
+					}
 				}
 				?><?php echo $i ?>. <?php echo $id_liste ?> - <b>Moyenne de la révision: <?php echo $resultat['moyenne'] ?>%</b> - <small>Revisé le <?php echo $resultat['date']?>. </small><br /><br /> <?php
 				$i++;
@@ -84,12 +88,10 @@
 					$i = '1';
 					while($rendu = mysql_fetch_array($requete_favoris)) {
 						$liste = $rendu['id_liste'];
-						$requete_listes = mysql_query("SELECT * FROM listes_public WHERE id = '$liste'")or die(mysql_error());
-						while($rendu_listes = mysql_fetch_array($requete_listes)){
-							echo ''.$i.'. ';
-							?><a href="?page=afficher&id=<?php echo $rendu_listes['id'] ?>"><?php echo $rendu_listes['titre'] ?></a> - <small><?php echo $rendu_listes['categorie'] ?></small><br /><?php
-							$i++;
-						}
+						$requete_listes = getListeById($liste);
+						echo ''.$i.'. ';
+						?><a href="afficher?id=<?php echo $requete_listes->id() ?>"><?php echo $requete_listes->titre() ?></a> - <small><?php echo $requete_listes->categorie() ?></small><br /><?php
+						$i++;
 					}
 				}
 			?>		

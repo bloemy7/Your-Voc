@@ -14,18 +14,6 @@ class ListeMotDefinition extends Entity{
 	public function __construct (){}        
 	
     public function setDatas(array $donnees){
-    	if(isset($donnees['id']))$this->id = $donnees['id'];
-    	if(isset($donnees['titre']))$this->titre = $donnees['titre'];
-    	if(isset($donnees['pseudo']))$this->membre = $donnees['pseudo'];
-    	if(isset($donnees['liste'])){
-    		//$this->listeMot = explode($separator, $donnees['listeMot']);
-    		$this->listeMot = $donnees['liste'];
-    	}
-    	if(isset($donnees['categorie']))$this->categorie = $donnees['categorie'];
-    	if(isset($donnees['categorie2']))$this->categorie2 = $donnees['categorie2'];
-    	if(isset($donnees['note']))$this->note = $donnees['note'];
-    	if(isset($donnees['vue']))$this->vue = $donnees['vue'];
-    	if(isset($donnees['commentaire']))$this->commentaire = $donnees['commentaire'];
     }
     
 	public function id(){
@@ -75,10 +63,10 @@ class ListeMotDefinition extends Entity{
 		$this->note = $note;
 	}
 	public function vue(){
-		return $this->vue;
+		return $this->vues;
 	}
 	public function setVue($vue){
-		$this->vue = $vue;
+		$this->vues = $vue;
 	}
 	public function commentaire(){
 		return $this->commentaire;

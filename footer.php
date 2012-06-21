@@ -3,7 +3,7 @@
 <div id="footer">
 	<div id="center">
 		<div id="left">
-				<div id="title_black">Partenaires</div>
+				<div id="title_black"><a href="partenaires">Partenaires</a></div>
 				<ul>
 					<li><a href="http://www.meltingmots.com" target="_blank" title="Apprenez à prendre des notes facilement et rapidement !">Dictionnaire des abréviations</a></li>
 					<li><a href="http://speakenglish.fr/" alt="Cours d'anglais">Apprendre ou réviser l'anglais facilement</a></li>

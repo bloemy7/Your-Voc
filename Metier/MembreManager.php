@@ -29,5 +29,11 @@ class MembreManager extends DbManager{
 		$entity = new Membre(array("id"=>$id));
 		return $this->select($query, $entity);
 	}
+	
+	public function getMembreByEmail($email){
+		$query = "select * from ".$this->table." where email = :email" ;
+		$entity = new Membre(array("email"=>$email));
+		return $this->select($query, $entity);
+	}
 }
 ?>
