@@ -35,7 +35,8 @@ function createListeSelectLangue(){
 					<div id="col1">
 						<h3>Catégories</h3>
 						<ul type="circle">
-							<?php
+							<?php				
+								
 								$allCat = getCategoriesWithNbListe(7);
 								foreach($allCat as $key=>$cat) {
 							?>
@@ -49,7 +50,6 @@ function createListeSelectLangue(){
 					<div id="col2outer"> 
 						<div id="col2mid"> 		
 							<?php
-							
 							if(isset($_POST['requete'])) {
 								$critere = $_POST['requete'];
 								$categorie = "aucun";
@@ -97,7 +97,7 @@ function createListeSelectLangue(){
 								} else {
 							?>
 									<h3>Pas de résultats</h3>
-									<p>Nous n'avons trouvé aucun résultat pour votre requète "<?php echo htmlspecialchars($critere); ?>". <a href="recherche.php">Réessayez</a> avec autre chose.</p>
+									<p>Nous n'avons trouvé aucun résultat pour votre requète "<?php echo htmlspecialchars($critere); ?>". <a href="recherche">Réessayez</a> avec autre chose.</p>
 									<a href="entrer_liste"><img src="images/orange button.png" alt="enter liste" /></a>						
 							<?php
 								}
@@ -128,7 +128,7 @@ function createListeSelectLangue(){
 								$listeMotArray = getListesMotDefinitionByDate($defaultNbListe);								
 								foreach($listeMotArray as $listeMot) {
 							?>
-									<li><b><?php echo $listeMot->categorie(); ?> -> <?php echo $listeMot->categorie2(); ?>: </b><br /><a href="afficher.php?id=<?php echo $listeMot->id(); ?>"><?php echo $listeMot->titre(); ?></a> <small>par <a href="profil.php?m=<?php echo $listeMot->membre(); ?>"><?php echo $listeMot->membre();?></a></small></li>
+									<li><b><?php echo $listeMot->categorie(); ?> -> <?php echo $listeMot->categorie2(); ?>: </b><br /><a href="afficher?id=<?php echo $listeMot->id(); ?>"><?php echo $listeMot->titre(); ?></a> <small>par <a href="profil.php?m=<?php echo $listeMot->membre(); ?>"><?php echo $listeMot->membre();?></a></small></li>
 							<?php } ?>
 							</ul>
 							<h3>Par thème</h3>

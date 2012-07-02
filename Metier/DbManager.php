@@ -1,4 +1,7 @@
 <?php
+/**
+ * @author lbigot
+ */
 abstract class DbManager {
 	protected $_db; // Instance de PDO
 	protected $arrayBinding;
@@ -17,6 +20,9 @@ abstract class DbManager {
 	}
 	
 	abstract protected function newInstanceEntity($donnees);
+	/**
+	 * key = columnName , value=EntityPropertyName 
+	 */
 	abstract protected function binding();
 	
 	public function getID_COLUMN(){
@@ -39,14 +45,11 @@ abstract class DbManager {
 			$entityListe[] = $this->newInstanceEntity($donnees);
 			
 		}
-		if(count($entityListe) == 1){
-			return $entityListe[0] ;
-		}
 		return $entityListe;
 	}
 	
-	protected function count($query, $entity){
-		return sizeof($this->select($query, $entity));
+	protected function count($arrayCritere){
+		return sizeof($arrayCritere);
 	}
 	
 	protected function countAll(){
@@ -77,8 +80,9 @@ abstract class DbManager {
 			$bindingArrayQuery[] = str_replace(" ", "",$partQuery);
 		}
 		$statement = $this->_db->prepare($query);	
+		
 		foreach($bindingArrayQuery as $binder){
-			$methodeName = $this->arrayBinding[str_replace(":", "",$binder)];
+			$methodeName = $this->arrayBinding[str_replace(":", "",$binder)];			
 			$value = call_user_func(array($entity, $methodeName));
 			$statement->bindValue($binder, $value);
 		}
@@ -123,6 +127,28 @@ abstract class DbManager {
 		$query = "UPDATE $this->table SET ";
 		$this->setValuesQuery($query, $entity);
 		$this->saveOrUpdate($query);
+	}
+	
+	
+	
+	
+	protected function find($query, $arrayCritere){
+		$statement = $this->bind($query, $arrayCritere);
+		$donnees = $statement->execute();
+		$entityListe = array();
+		while ($donnees = $statement->fetch(PDO::FETCH_ASSOC)){
+			$entityListe[] = $this->newInstanceEntity($donnees);
+		}
+		return $entityListe;
+	}
+	
+	protected function binder($statement, $query, $arrayCritere){
+		$values = count($nameCritere);
+		foreach($arrayCritere as $critere){
+				
+		}
+		$criteria = sprintf("?%s", str_repeat(",?", ($values ? $values-1 : 0)));
+		$query = sprintf("select * from ".$this->table." where categorie in (%s)", $criteria);
 	}
 }
 ?>
