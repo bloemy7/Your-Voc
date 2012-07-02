@@ -18,10 +18,17 @@ class CategorieManager extends DbManager{
 		return new Categorie($donnees);
 	}
 	
-	public function getCategorieByName($name){
-		$query = "select * from ".$this->table." where categorie = :categorie" ;
-		$entity = new Categorie(array("categorie"=>$name));
-		return $this->select($query, $entity);
+	public function getCategoriesByName($nameCritere){		
+		$values = count($nameCritere);
+		$criteria = sprintf("?%s", str_repeat(",?", ($values ? $values-1 : 0)));
+		$query = sprintf("select * from ".$this->table." where categorie in (%s)", $criteria);
+		$statement = $this->_db->prepare($query);
+		$donnees = $statement->execute($nameCritere);
+		$entityListe = array();
+		while ($donnees = $statement->fetch(PDO::FETCH_ASSOC)){
+			$entityListe[] = $this->newInstanceEntity($donnees);
+		}		
+		return $entityListe;
 	}
 	
 	public function getCategorieById($id){

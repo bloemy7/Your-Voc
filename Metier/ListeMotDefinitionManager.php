@@ -23,6 +23,7 @@ class ListeMotDefinitionManager extends DbManager {
 	
 	protected function newInstanceEntity($donnees){
 		$entity = new ListeMotDefinition();
+		$entity->setDatas($donnees);
 		if(isset($donnees['id']))$entity->setId($donnees['id']);
 		if(isset($donnees['titre']))$entity->setTitre($donnees['titre']);
 		if(isset($donnees['pseudo']))$entity->setMembre($donnees['pseudo']);
@@ -52,8 +53,7 @@ class ListeMotDefinitionManager extends DbManager {
 	
 	public function getNbListeByCategorie($nomCategorie){
 		$query = "SELECT * FROM ".$this->table." WHERE categorie = :categorie OR categorie2 = :categorie2";
-		$entity = $this->newInstanceEntity(array("categorie"=>$nomCategorie, "categorie2"=>$nomCategorie));	
-		return $this->count($query, $entity);
+		return $this->count($query, array("categorie"=>$nomCategorie, "categorie2"=>$nomCategorie));
 	}
 	
 	public function getListeByCritere($critere){
