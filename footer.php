@@ -13,7 +13,7 @@
 			</div>
 
 			<div id="right">
-				<div id="title_black">Statistiques</div>
+				<div id="title_black"><u>Statistiques</u></div>
 				<ul>
 				<?php
 					$retour = mysql_query("SELECT COUNT(*) AS nbre_entrees FROM listes_public" );

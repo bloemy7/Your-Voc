@@ -56,6 +56,12 @@ class ListeMotDefinitionManager extends DbManager {
 		return $this->count($query, $entity);
 	}
 	
+	public function getNbListe(){
+		$query = "SELECT * FROM ".$this->table."";
+		$entity = $this->newInstanceEntity(array());
+		return $this->count($query, $entity);
+	}
+	
 	public function getListeByCritere($critere){
 		$query = "SELECT * FROM ".$this->table." WHERE ";
 		$datas = array();		
@@ -80,10 +86,26 @@ class ListeMotDefinitionManager extends DbManager {
 		$entity->setMembre($pseudo);
 		return $this->select($query, $entity);
 	}
+	public function getListeByPseudo($pseudo){
+		$query = "select * from ".$this->table." where pseudo = :pseudo";
+		$entity = new ListeMotDefinition();
+		$entity->setMembre($pseudo);
+		return $this->select($query, $entity);
+	}
 	public function getListeById($id){
 		$query = "select * from ".$this->table." where id = :id";
 		$entity = new ListeMotDefinition();
 		$entity->setId($id);
+		return $this->select($query, $entity);		
+	}
+	public function getListeByCategorie($categorie){
+		$query = "select * from ".$this->table." where categorie = :categorie";
+		$entity = new ListeMotDefinition(array("categorie"=>$categorie));
+		return $this->select($query, $entity);
+	}
+	public function getListeOrderByVues(){
+		$query = "select * from ".$this->table." order by (vues + 0)";
+		$entity = new ListeMotDefinition();
 		return $this->select($query, $entity);		
 	}
 }

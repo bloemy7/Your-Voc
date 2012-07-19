@@ -22,7 +22,7 @@ if (isset($_POST['connexion']) && $_POST['connexion'] == 'Connexion') {
 				$waitingText = "<h3>Bienvenue <span style=\"color:blue;\">".$membre->login()."</span>. Vous allez être redirigé vers la page d'où vous provenez. Bonne visite!</h3>";
 				
 			} else {
-				header('Location: membre.php');
+				header('Location: membre');
 				exit();
 			}
 		}else{
@@ -52,8 +52,8 @@ if (isset($_POST['connexion']) && $_POST['connexion'] == 'Connexion') {
 				<?php
 					}
 				?>
-				<input type="checkbox" name="auto" id="auto" /> <label for="auto">Connexion automatique :</label><br />
-				<input type="submit" name="connexion" value="Connexion" /></p>
+				<label for="auto">Connexion automatique :</label><input type="checkbox" name="auto" id="auto" /> <br />
+				<div style="margin-left: 110px"><input type="submit" name="connexion" value="Connexion" /></div></p>
 			</form>
 		</div>
 <?php 
@@ -61,7 +61,7 @@ if (isset($_POST['connexion']) && $_POST['connexion'] == 'Connexion') {
 		echo $waitingText;
 	}
 ?>
-<a href="inscription">Vous inscrire</a>
+<a href="inscription">Pas encore inscrit ?</a>
 <?php if (isset($erreur)) echo '<br /><br />',$erreur; ?>
 			</div>
         </div>

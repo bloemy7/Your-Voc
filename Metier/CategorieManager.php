@@ -20,13 +20,21 @@ class CategorieManager extends DbManager{
 	
 	public function getCategorieByName($name){
 		$query = "select * from ".$this->table." where categorie = :categorie" ;
-		$entity = new Categorie(array("categorie"=>$name));
+		$entity = new Categorie(array("categorie1"=>$name));
 		return $this->select($query, $entity);
 	}
 	
 	public function getCategorieById($id){
-		$query = "select * from ".$this->table." where id = :id" ;
-		$entity = new Categorie(array("id"=>$id));
+		$query = "select * from ".$this->table." where id = :categorie";
+		$entity = new Categorie(array("categorie"=>$id));
+		$entity->setId($id);
+		return $this->select($query, $entity);		
+	}
+	
+	public function getCategorieByGeneral($id){
+		$query = "select * from ".$this->table." where general = :categorie";
+		$entity = new Categorie(array("categorie"=>$id));
+		$entity->setId($id);
 		return $this->select($query, $entity);
 	}
 }

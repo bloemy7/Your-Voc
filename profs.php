@@ -26,7 +26,6 @@
 					       $arrayCritere = array("Allemand","Anglais","Espagnol","Français");
 					       foreach($arrayCritere as $critere){
 					        $categorie = getCategorieByName($critere);
-        					$categorie = $categorie[0];
 					       ?>
 					        <li><a href="<?php echo $categorie->url() ?>"><?php echo  $categorie->nom() ?></a></li>
 					       <?php  

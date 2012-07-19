@@ -1,6 +1,6 @@
 ﻿<?php
 	if (!isset($_SESSION['login'])) {
-		header ('Location: index.php');
+		header ('Location: accueil');
 		exit();
 	} 
 ?>
@@ -21,7 +21,7 @@
 					$query = mysql_query("SELECT * FROM combiner WHERE pseudo = '$pseudo' ORDER BY id DESC LIMIT 5");
 					$y = 1;
 					if(mysql_num_rows($query) == 0) {
-						echo 'Aucune combinaison créée. <br> <a href="gerer_public.php">Commencer maintenant</a> !';
+						echo 'Aucune combinaison créée. <br> <a href="gerer_public">Commencer maintenant</a> !';
 					}
 					else {
 						while($resultat1 = mysql_fetch_array($query)) {

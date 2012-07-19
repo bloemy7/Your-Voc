@@ -6,6 +6,6 @@ setcookie('id');
 unset($_COOKIE['id']);
 setcookie('connexion_auto');
 unset($_COOKIE['connexion_auto']);
-header('Location: index.php');
+header('Location: accueil');
 exit();
 ?>

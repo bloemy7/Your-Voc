@@ -40,10 +40,10 @@ function getHTML_Etape2() {
 			$html = 'Votre commentaire est trop long. Veuillez réessayer.';
 		}
 		else if(!isset($mots) OR empty($mots)) {
-			$html = 'Veuillez entrer vos mots correctement <a href="entrer_liste.php">ici</a>';
+			$html = 'Veuillez entrer vos mots correctement <a href="entrer_liste">ici</a>';
 		}
 		else if(!isset($titre) OR empty($titre)) {
-			$html = 'Veuillez préciser un titre! <a href="entrer_liste.php">Retour</a>';
+			$html = 'Veuillez préciser un titre! <a href="entrer_liste">Retour</a>';
 		} else if(isset($time) OR !empty($time)) {
 			$titre = strip_tags(mysql_real_escape_string($titre));
 			$login = strip_tags($_SESSION['login']);

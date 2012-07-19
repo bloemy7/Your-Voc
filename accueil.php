@@ -104,15 +104,16 @@ function createListeSelectLangue(){
 							} else { // et voilà le formulaire, en HTML de nouveau !
 							?>
 								<a href="entrer_liste"><img src="images/orange button.png" alt="enter liste" /></a>
-								<b><h2>ou chercher une liste:</h2></b>
+								<div id="text-center"><b><h2>ou chercher une liste :</h2></b>
 								<form action="index" method="Post">
 									<p>
-										Catégorie?	
+										<b>Catégorie :</b>
 										<select id="categorie" name="categorie"></select>
 										<br><br>
-										<input type="text" name="requete" value="Mots-clés" size="30" title="Mots-clés" >
+										<b>Mots-clés :</b>
+										<input type="text" name="requete" size="30" title="Mots-clés" >
 										<br><br>
-										<input type="submit" value="Recherche">
+										<input type="submit" value="Recherche"></div>
 									</p>
 								</form>
 							<?php
@@ -122,7 +123,7 @@ function createListeSelectLangue(){
 						</div> 
 						<div id="col2side">
 							<?php $defaultNbListe = 3; ?>
-							<h3><a href="gerer_public"><?php echo $defaultNbListe?> derniers ajouts</a></h3>					
+							<h3><a href="gerer_public">Derniers ajouts</a></h3>					
 							<ul type="circle">
 							<?php
 								$listeMotArray = getListesMotDefinitionByDate($defaultNbListe);								
@@ -131,7 +132,7 @@ function createListeSelectLangue(){
 									<li><b><?php echo $listeMot->categorie(); ?> -> <?php echo $listeMot->categorie2(); ?>: </b><br /><a href="afficher?id=<?php echo $listeMot->id(); ?>"><?php echo $listeMot->titre(); ?></a> <small>par <a href="profil?m=<?php echo $listeMot->membre(); ?>"><?php echo $listeMot->membre();?></a></small></li>
 							<?php } ?>
 							</ul>
-							<h3>Par thème</h3>
+							<h3>Thèmes</h3>
 							<ul type="circle">
 								<li><a href="recherche?id=%sport%&cat=aucun">Le sport</a></li>
 								<li><a href="recherche?id=%tourisme%&cat=aucun">Le tourisme - Les voyages</a></li>
