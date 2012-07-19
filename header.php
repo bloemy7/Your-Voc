@@ -28,9 +28,6 @@
 <!--Fin du header !-->
 <?php
 
-print_r($_POST);
-
-print_r($_GET);
 // Le mec n'est pas connecté mais les cookies sont là, on y va !
 $id_auto = getIdCookie();
 if($id_auto != null){
