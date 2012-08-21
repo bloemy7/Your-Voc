@@ -9,9 +9,11 @@ class CategorieManager extends DbManager{
 	}
 	
 	protected function binding(){
+		$this->arrayBinding[$this->ID_COLUMN] = "id";
 		$this->arrayBinding["categorie"] = "nom";
 		$this->arrayBinding["url"] = "url";
-		$this->arrayBinding["general"] = "general";
+		$this->arrayBinding["general"] = "groupe";
+		$this->arrayBinding["nbListe"] = "nbListe";		
 	}
 	
 	protected function newInstanceEntity($donnees){
@@ -24,17 +26,28 @@ class CategorieManager extends DbManager{
 		return $this->select($query, $entity);
 	}
 	
-	public function getCategorieById($id){
-		$query = "select * from ".$this->table." where id = :categorie";
-		$entity = new Categorie(array("categorie"=>$id));
-		$entity->setId($id);
-		return $this->select($query, $entity);		
+	public function getCategoriesByName($nameCritere){		
+		$values = count($nameCritere);
+		$criteria = sprintf("?%s", str_repeat(",?", ($values ? $values-1 : 0)));
+		$query = sprintf("select * from ".$this->table." where categorie in (%s)", $criteria);
+		$statement = $this->_db->prepare($query);
+		$donnees = $statement->execute($nameCritere);
+		$entityListe = array();
+		while ($donnees = $statement->fetch(PDO::FETCH_ASSOC)){
+			$entityListe[] = $this->newInstanceEntity($donnees);
+		}		
+		return $entityListe;
 	}
 	
-	public function getCategorieByGeneral($id){
-		$query = "select * from ".$this->table." where general = :categorie";
-		$entity = new Categorie(array("categorie"=>$id));
-		$entity->setId($id);
+	public function getCategorieById($id){
+		$query = "select * from ".$this->table." where id = :id" ;
+		$entity = new Categorie(array("id"=>$id));
+		return $this->select($query, $entity);	
+	}
+	
+	public function getCategorieByGeneral($groupe){
+		$query = "select * from ".$this->table." where general = :general";
+		$entity = new Categorie(array("general"=>$groupe));
 		return $this->select($query, $entity);
 	}
 }
