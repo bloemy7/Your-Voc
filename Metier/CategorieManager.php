@@ -9,13 +9,21 @@ class CategorieManager extends DbManager{
 	}
 	
 	protected function binding(){
+		$this->arrayBinding[$this->ID_COLUMN] = "id";
 		$this->arrayBinding["categorie"] = "nom";
 		$this->arrayBinding["url"] = "url";
-		$this->arrayBinding["general"] = "general";
+		$this->arrayBinding["general"] = "groupe";
+		$this->arrayBinding["nbListe"] = "nbListe";		
 	}
 	
 	protected function newInstanceEntity($donnees){
 		return new Categorie($donnees);
+	}
+	
+	public function getCategorieByName($name){
+		$query = "select * from ".$this->table." where categorie = :categorie" ;
+		$entity = new Categorie(array("categorie1"=>$name));
+		return $this->select($query, $entity);
 	}
 	
 	public function getCategoriesByName($nameCritere){		
@@ -37,10 +45,9 @@ class CategorieManager extends DbManager{
 		return $this->select($query, $entity);	
 	}
 	
-	public function getCategorieByGeneral($id){
-		$query = "select * from ".$this->table." where general = :categorie";
-		$entity = new Categorie(array("categorie"=>$id));
-		$entity->setId($id);
+	public function getCategorieByGeneral($groupe){
+		$query = "select * from ".$this->table." where general = :general";
+		$entity = new Categorie(array("general"=>$groupe));
 		return $this->select($query, $entity);
 	}
 }
