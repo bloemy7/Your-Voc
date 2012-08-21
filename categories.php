@@ -12,31 +12,48 @@ $(function(){
   });
 });
 </script>
-        <!-- Début de la présentation -->
-        <div id="presentation1">
-        </div>
-        <!-- Fin de la présentation -->
-
-        <!-- Début du contenu -->
-        <div id="content">
-            <div id="bloc">
-            <div id="title">Catégories </div>
-							<form action="recherche.php" method="Post">
-						 <p>
-									Catégorie?				 
-											<select name="categorie">
-											<?php
-											if(isset($_POST['ok']) OR isset($_GET['cat'])) {
-												if(isset($_GET['cat'])) {
-													$categorie = addslashes($_GET['cat']);
-													$categorie = mysql_real_escape_string($categorie);
-													$sql = mysql_query("SELECT * FROM categories WHERE id = '$categorie'");
-													$rendu = mysql_fetch_array($sql);
-													$categorie1 = $rendu['categorie'];
-											?>
-											<option value="<?php echo $categorie1 ?>"><?php echo $categorie1 ?></option>
-											<?php }
-											}
+<!-- Début de la présentation -->
+<div id="presentation1">
+</div>
+<!-- Fin de la présentation -->
+<!-- Début du contenu -->
+<div id="content">
+	<div id="bloc">
+  		<div id="title">Catégories </div>
+  		<?php
+  		if(isset($_GET['cat'])) {
+  			$id = addslashes($_GET['cat']);
+  			$id = mysql_real_escape_string($id);
+  			$fonction = getCategorieById($id);
+  			if(empty($fonction)){
+  				echo 'Veuillez préciser une catégorie existante.';
+  				echo '</div></div>';
+  				include("footer.php");
+  				die();
+  			} 
+  		}
+  		?>
+		<form action="recherche" method="post">
+		 <p>
+		Catégorie?				 
+		<select name="categorie">
+		 <?php
+		if(isset($_POST['ok']) OR isset($_GET['cat'])) {
+			if(isset($_GET['cat'])) {
+				$id = addslashes($_GET['cat']);
+				$id = mysql_real_escape_string($id);
+				$fonction = getCategorieById($id);
+				if(empty($fonction)){
+					echo 'Veuillez préciser une catégorie existante.';
+					echo '</div></div>';
+					include("footer.php");
+					die();
+				}
+				$categorie1 = $fonction->nom();
+				?>
+				<option value="<?php echo $categorie1 ?>"><?php echo $categorie1 ?></option>
+	<?php }
+		}
 											?>
 											<option value="aucun">Toutes</option>
 											<?php echo "
@@ -90,15 +107,14 @@ $(function(){
 							<input type="submit" value="Recherche">
 						</p>
 						</form>
-	<a href="entrer_liste.php" >Entrer une nouvelle liste</a><br />
+	<a href="entrer_liste" >Entrer une nouvelle liste</a><br />
 	<?php
 if(isset($_POST['ok']) OR isset($_GET['cat'])) {
 	if(isset($_GET['cat'])) {
 		$categorie = addslashes($_GET['cat']);
 		$categorie = mysql_real_escape_string($categorie);
-		$sql = mysql_query("SELECT * FROM categories WHERE id = '$categorie'");
-		$rendu = mysql_fetch_array($sql);
-		$categorie1 = $rendu['categorie'];
+		$fonction = getCategorieById($categorie);
+		$categorie1 = $fonction->nom();
 	}
 	echo '<center><h2>'.htmlspecialchars($categorie1).'</h2></center>';
 	$sql1 = mysql_query("SELECT * FROM listes_public WHERE categorie = '$categorie1' OR categorie2 = '$categorie1' ORDER BY id DESC"); 
@@ -109,7 +125,7 @@ if(isset($_POST['ok']) OR isset($_GET['cat'])) {
 	else {
 
 ?>
-		<form method="post" action="categories.php?cat=<?php echo $_GET['cat'] ?>" >
+		<form method="post" action="categories?cat=<?php echo $_GET['cat'] ?>" >
 		<input type="submit" name="note" value="Trier par note" />
 		<input type="submit" name="categorie" value="Trier par catégories" />
 		<input type="submit" name="auteur" value="Trier par auteur" />
@@ -120,16 +136,16 @@ if(isset($_POST['ok']) OR isset($_GET['cat'])) {
 $messagesParPage=30; //Nous allons afficher 5 messages par page.
 
 //Une connexion SQL doit être ouverte avant cette ligne...
-$retour_total=mysql_query("SELECT COUNT(*) AS total FROM listes_public WHERE categorie = '$categorie1' OR categorie2 = '$categorie1'"); //Nous récupérons le contenu de la requête dans $retour_total
-$donnees_total=mysql_fetch_assoc($retour_total); //On range retour sous la forme d'un tableau.
-$total=$donnees_total['total']; //On récupère le total pour le placer dans la variable $total.
+$retour_total=getNbListeByCategorie($categorie1); //Nous récupérons le contenu de la requête dans $retour_total
+//On range retour sous la forme d'un tableau.
+$total= $retour_total; //On récupère le total pour le placer dans la variable $total.
 //Nous allons maintenant compter le nombre de pages.
 $nombreDePages=ceil($total/$messagesParPage);
 
-if(isset($_GET['page'])) // Si la variable $_GET['page'] existe...
+if(isset($_GET['nb_page'])) // Si la variable $_GET['page'] existe...
 {
-	if(is_numeric($_GET['page'])) {
-		 $pageActuelle=intval(addslashes($_GET['page']));
+	if(is_numeric($_GET['nb_page'])) {
+		 $pageActuelle=intval(addslashes($_GET['nb_page']));
 		 
 		 if($pageActuelle>$nombreDePages) // Si la valeur de $pageActuelle (le numéro de la page) est plus grande que $nombreDePages...
 		 {
@@ -219,7 +235,7 @@ while($donnees_messages=mysql_fetch_assoc($retour_messages)) // On lit les entr�
      //Je vais afficher les messages dans des petits tableaux. C'est à vous d'adapter pour votre design...
      //De plus j'ajoute aussi un nl2br pour prendre en compte les sauts à la ligne dans le message.
 	?>
-	<?php echo $i ?>. <b><?php echo $donnees_messages['categorie'] ?> <-> <?php echo $donnees_messages['categorie2'] ?>: </b> <a href="afficher.php?id=<?php echo $donnees_messages['id']; ?>"><?php echo $donnees_messages['titre'] ?></a> (Note: <?php echo $donnees_messages['note'] ?>/5 et <?php echo $donnees_messages['vues'] ?> vues)<br /><small> par <a href="profil.php?m=<?php echo $donnees_messages['pseudo']?>"><?php echo $donnees_messages['pseudo']?></a> le <?php echo $donnees_messages['date'] ?></small><br /><br />
+	<?php echo $i ?>. <b><?php echo $donnees_messages['categorie'] ?> <-> <?php echo $donnees_messages['categorie2'] ?>: </b> <a href="afficher?id=<?php echo $donnees_messages['id']; ?>"><?php echo $donnees_messages['titre'] ?></a> (Note: <?php echo $donnees_messages['note'] ?>/5 et <?php echo $donnees_messages['vues'] ?> vues)<br /><small> par <a href="profil?m=<?php echo $donnees_messages['pseudo']?>"><?php echo $donnees_messages['pseudo']?></a> le <?php echo $donnees_messages['date'] ?></small><br /><br />
 		<?php $i++; 
     //J'ai rajouté des sauts à la ligne pour espacer les messages.   
 }
@@ -235,40 +251,38 @@ for($i=1; $i<=$nombreDePages; $i++) //On fait notre boucle
      else //Sinon...
      {
 			$cat = $_GET['cat'];
-          echo ' <a href="categories.php?page='.$i.'&class='.$_SESSION['classement'].'&cat='.$cat.'">'.$i.'</a> ';
+          echo ' <a href="categories?nb_page='.$i.'&class='.$_SESSION['classement'].'&cat='.$cat.'">'.$i.'</a> ';
      }
 }
 echo '</p>';
 }
 }
 
-$mysql = mysql_query("SELECT * FROM categories WHERE general = '1'");
-$mysql2 = mysql_query("SELECT * FROM categories WHERE general = '2'");
-$mysql3 = mysql_query("SELECT * FROM categories WHERE general = '3'");
-$mysql4 = mysql_query("SELECT * FROM categories WHERE general = '4'");
+$mysql = getCategorieByGeneral('1');
+$mysql2 = getCategorieByGeneral('4');
+$mysql3 = getCategorieByGeneral('2');
+$mysql4 = getCategorieByGeneral('3');
 ?>
 	<div id="left">
 		<h2>Europe</h2>	
 			<ul type="circle">
 				<?php
-					while($mysq1_r = mysql_fetch_array($mysql)) {
-						?><li><a href="<?php echo $mysq1_r['url'] ?>"><?php echo $mysq1_r['categorie']?></a> - 								
-						<?php $cat = $mysq1_r['categorie'];
-						$retour = mysql_query("SELECT * FROM listes_public WHERE categorie = '$cat' OR categorie2 = '$cat'")or die(mysql_error());
-						$test = mysql_num_rows($retour); ?>
-						(<i><?php echo $test ?> listes </i>)<br /></li><?php
-					}
+				foreach($mysql as $mysql_r){
+					?><li><a href="<?php echo $mysql_r->url() ?>"><?php echo $mysql_r->nom()?></a> - 								
+					<?php $cat = $mysql_r->nom();
+					$retour = getNbListeByCategorie($cat);?>
+					(<i><?php echo $retour ?> listes </i>)<br /></li><?php
+				}
 				?>
 			</ul>
 		<h2>Europe de l'Est</h2>	
 			<ul type="circle">
 					<?php
-					while($mysq4_r = mysql_fetch_array($mysql4)) {
-						?><li><a href="<?php echo $mysq4_r['url'] ?>"><?php echo $mysq4_r['categorie']?></a> - 								
-						<?php $cat = $mysq4_r['categorie'];
-						$retour = mysql_query("SELECT * FROM listes_public WHERE categorie = '$cat' OR categorie2 = '$cat'")or die(mysql_error());
-						$test = mysql_num_rows($retour); ?>
-						(<i><?php echo $test ?> listes </i>)<br /></li><?php
+					foreach($mysql2 as $mysql2_r){
+						?><li><a href="<?php echo $mysql2_r->url() ?>"><?php echo $mysql2_r->nom()?></a> - 								
+						<?php $cat = $mysql2_r->nom();
+						$retour = getNbListeByCategorie($cat);?>
+						(<i><?php echo $retour ?> listes </i>)<br /></li><?php
 					}
 					?>
 			</ul>		
@@ -277,24 +291,22 @@ $mysql4 = mysql_query("SELECT * FROM categories WHERE general = '4'");
 		<h2>Asie</h2>	
 			<ul type="circle">
 					<?php
-					while($mysq2_r = mysql_fetch_array($mysql2)) {
-						?><li><a href="<?php echo $mysq2_r['url'] ?>"><?php echo $mysq2_r['categorie']?></a> - 								
-						<?php $cat = $mysq2_r['categorie'];
-						$retour = mysql_query("SELECT * FROM listes_public WHERE categorie = '$cat' OR categorie2 = '$cat'")or die(mysql_error());
-						$test = mysql_num_rows($retour); ?>
-						(<i><?php echo $test ?> listes </i>)<br /></li><?php
+					foreach($mysql3 as $mysql3_r){
+						?><li><a href="<?php echo $mysql3_r->url() ?>"><?php echo $mysql3_r->nom()?></a> - 								
+						<?php $cat = $mysql3_r->nom();
+						$retour = getNbListeByCategorie($cat);?>
+						(<i><?php echo $retour ?> listes </i>)<br /></li><?php
 					}
 					?>
 			</ul>
 			<h2>Moyen Orient</h2>	
 				<ul type="circle">
 					<?php
-					while($mysq3_r = mysql_fetch_array($mysql3)) {
-						?><li><a href="<?php echo $mysq3_r['url'] ?>"><?php echo $mysq3_r['categorie']?></a> - 								
-						<?php $cat = $mysq2_r['categorie'];
-						$retour = mysql_query("SELECT * FROM listes_public WHERE categorie = '$cat' OR categorie2 = '$cat'")or die(mysql_error());
-						$test = mysql_num_rows($retour); ?>
-						(<i><?php echo $test ?> listes </i>)<br /></li><?php
+					foreach($mysql4 as $mysql4_r){
+						?><li><a href="<?php echo $mysql4_r->url() ?>"><?php echo $mysql4_r->nom()?></a> - 								
+						<?php $cat = $mysql4_r->nom();
+						$retour = getNbListeByCategorie($cat);?>
+						(<i><?php echo $retour ?> listes </i>)<br /></li><?php
 					}
 					?>
 			</ul>

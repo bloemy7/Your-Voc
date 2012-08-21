@@ -35,5 +35,10 @@ class MembreManager extends DbManager{
 		$entity = new Membre(array("email"=>$email));
 		return $this->select($query, $entity);
 	}
+	public function getPassByLogin($login){
+		$query = "select pass_md5 from ".$this->table." where login = :login" ;
+		$entity = new Membre(array("login"=>$login));
+		return $this->select($query, $entity);
+	}
 }
 ?>

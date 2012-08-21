@@ -57,7 +57,7 @@ if(!isset($_GET['id'])) {
 else {
 	$id_liste = $_GET['id'];
 	?>
-	Vous allez signaler une erreur pour <a href="afficher.php?id=<?php echo $id_liste ?>">cette liste</a>. Est-ce correct?<br />
+	Vous allez signaler une erreur pour <a href="afficher?id=<?php echo $id_liste ?>">cette liste</a>. Est-ce correct?<br />
 	Veuillez indiquer le type d'erreur (titre ou liste) et donner plus d'informations sur l'erreur.<br />
 	Merci de votre contribution!<br />
 	<form name="signaler" method="post">
@@ -66,7 +66,7 @@ else {
 		<?php 
 		if(isset($_SESSION['login'])) {
 			$pseudo = $_SESSION['login'];
-			echo 'Connecté en tant que '.$_SESSION['login'].'. Pas vous? <a href="deconnexion.php">Déconnectez-vous!</a> <input type="hidden" name="pseudo" value="'.$pseudo.'" /> ';
+			echo 'Connecté en tant que '.$_SESSION['login'].'. Pas vous? <a href="deconnexion">Déconnectez-vous!</a> <input type="hidden" name="pseudo" value="'.$pseudo.'" /> ';
 		}
 		else {
 			echo '<p>Pseudo : <br /><input type="text" name="pseudo" /><br />';

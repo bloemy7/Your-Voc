@@ -84,7 +84,8 @@ function getMembreByEmail($email){
 }
 
 function getNombreListeMot(){
-	DBHelper::getDBManager("ListeMotDefinition")->countAll();
+	$nombre = DBHelper::getDBManager("ListeMotDefinition")->countAll();
+	return $nombre;
 }
 
 function getNombreMembre(){
@@ -233,8 +234,41 @@ function getListeByPseudoLimit3($pseudo){
 	$liste = DBHelper::getDBManager("ListeMotDefinition")->getListeByPseudoLimit3($pseudo);
 	return $liste;
 }
+function getListeByPseudo($pseudo){
+	$liste = DBHelper::getDBManager("ListeMotDefinition")->getListeByPseudo($pseudo);
+	return $liste;
+}
 function getListeById($id){
 	$liste = DBHelper::getDBManager("ListeMotDefinition")->getListeById($id);
 	return $liste;
+}
+
+function getNbListeByCategorie($nomCategorie){
+	$NbListe = DBHelper::getDBManager("ListeMotDefinition")->getNbListeByCategorie($nomCategorie);
+	return $NbListe;
+}
+function getCategorieByGeneral($id){
+	$categorie = DBHelper::getDBManager("Categorie")->getCategorieByGeneral($id);
+	return $categorie;
+}
+function getListeByCategorie($categorie){
+	$liste = DBHelper::getDBManager("ListeMotDefinition")->getListeByCategorie($categorie);
+	return $liste;	
+}
+function getNbListe(){
+	$NbListe = DBHelper::getDBManager("ListeMotDefinition")->getNbListe();
+	return $NbListe;
+}
+function getAllListe(){
+	$liste = DBHelper::getDBManager("ListeMotDefinition")->getList();
+	return $liste;
+}
+function getListeOrderByVues(){
+	$liste = DBHelper::getDBManager("ListeMotDefinition")->getListeOrderByVues();
+	return $liste;
+}
+function getPassByLogin($login){
+	$membre = DBHelper::getDBManager("Membre")->getPassByLogin($login);
+	return $membre;
 }
 ?>
