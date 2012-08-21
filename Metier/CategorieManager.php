@@ -34,6 +34,13 @@ class CategorieManager extends DbManager{
 	public function getCategorieById($id){
 		$query = "select * from ".$this->table." where id = :id" ;
 		$entity = new Categorie(array("id"=>$id));
+		return $this->select($query, $entity);	
+	}
+	
+	public function getCategorieByGeneral($id){
+		$query = "select * from ".$this->table." where general = :categorie";
+		$entity = new Categorie(array("categorie"=>$id));
+		$entity->setId($id);
 		return $this->select($query, $entity);
 	}
 }
