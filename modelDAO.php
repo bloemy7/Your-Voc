@@ -58,7 +58,8 @@ function getMembre($login, $mdp){
 		$liste = DBHelper::getDBManager("Membre")->getMembreByLogin($login);
 		$result = "Votre identifiant est inconnu, merci de vous inscrire pour vous connecter";
 		if(count($liste) == 1){
-			$result = $liste;
+			$result = $liste[0];
+			print_r($result);
 			if(md5($mdp) != $result->pass()){
 				$result = "Votre mot de passe est incorrect";
 			}
