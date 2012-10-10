@@ -52,7 +52,10 @@ class ListeMotDefinitionManager extends DbManager {
 	
 	public function getNbListeByCategorie($nomCategorie){
 		$query = "SELECT * FROM ".$this->table." WHERE categorie = :categorie OR categorie2 = :categorie2";
-		return $this->count($query, array("categorie"=>$nomCategorie, "categorie2"=>$nomCategorie));
+		$listMotDef = new ListeMotDefinition();
+		$listMotDef->setCategorie($nomCategorie);
+		$listMotDef->setCategorie2($nomCategorie);
+		return $this->count($query, $listMotDef);
 	}
 	
 	public function getNbListe(){
@@ -98,7 +101,7 @@ class ListeMotDefinitionManager extends DbManager {
 		return $this->select($query, $entity);		
 	}
 	public function getListeByCategorie($categorie){
-		$query = "select * from ".$this->table." where categorie = :categorie";
+		$query = "select * from ".$this->table." where categorie = :categorie";				
 		$entity = new ListeMotDefinition(array("categorie"=>$categorie));
 		return $this->select($query, $entity);
 	}

@@ -23,11 +23,13 @@ function createListeSelectLangue(){
         <!-- Début du contenu -->
         <div id="content">
             <div id="bloc">
-            <div id="title"><a href="ccm">Your-Voc, c'est quoi ?</a> </div>
-				<p><h3>Avouez-le, vous l'avez tous connu. Un test arrive très rapidement, mais vous ne savez pas comment réviser et vous manquez de motivation.</h3>
-				Et bien, Your-Voc est fait pour vous. Créé par quelqu'un comme vous, pour vous, il vous aidera très facilement à apprendre votre vocabulaire sans y perdre des heures. Vous pouvez passer du temps sur l'ordinateur, Facebook et compagnie, et réviser en même temps. <br />
-				C'est une méthode déjà utilisée, testée et approuvée dans pleins d'autres pays, et elle débarque désormais en français pour vous, gratuitement.<br />
-				Commencez donc par chercher une liste ou bien par créer votre propre liste.<br /></p>
+            	<div id="title"><a href="ccm">Your-Voc, c'est quoi ?</a></div>
+				<p>
+					<h3>Avouez-le, vous l'avez tous connu. Un test arrive très rapidement, mais vous ne savez pas comment réviser et vous manquez de motivation.</h3>
+					Et bien, Your-Voc est fait pour vous. Créé par quelqu'un comme vous, pour vous, il vous aidera très facilement à apprendre votre vocabulaire sans y perdre des heures. Vous pouvez passer du temps sur l'ordinateur, Facebook et compagnie, et réviser en même temps. <br>
+					C'est une méthode déjà utilisée, testée et approuvée dans pleins d'autres pays, et elle débarque désormais en français pour vous, gratuitement.<br />
+					Commencez donc par chercher une liste ou bien par créer votre propre liste.<br>
+				</p>
 			</div>
 
             <div id="bloc">
@@ -39,7 +41,7 @@ function createListeSelectLangue(){
 								$allCat = getCategoriesWithNbListe(7);
 								foreach($allCat as $key=>$cat) {
 							?>
-									<li><a href="<?php echo $cat->url() ?>"><?php echo  $cat->nom() ?></a> - <i><?php echo $cat->nbListe() ?> listes </i></li><br />
+									<li><a href="<?php echo $cat->url() ?>"><?php echo  $cat->nom() ?></a> - <i><?php echo $cat->nbListe() ?> listes </i></li><br>
 							<?php 
 								} 
 							?>
@@ -47,9 +49,8 @@ function createListeSelectLangue(){
 						<a href="categories">Plus de catégories</a><br /><br />
 					</div> 
 					<div id="col2outer"> 
-						<div id="col2mid"> 		
+						<div id="col2mid"> 	
 							<?php
-							
 							if(isset($_POST['requete'])) {
 								$critere = $_POST['requete'];
 								$categorie = "aucun";
@@ -80,7 +81,7 @@ function createListeSelectLangue(){
 									foreach($resultats as $resultat){
 										echo ($key+1).". " ;
 							?>
-										<a href="afficher?id=<?php echo $resultat->id(); ?>"><?php echo $resultat->titre(); ?></a> <small>entré le <?php echo $resultat->date(); ?> par <?php echo $resultat->membre(); ?> dans les catégories <?php echo $resultat->categorie(); ?> <-> <?php echo $resultat->categorie2() ?> (<?php echo $resultat->note() ?>/5)</small><br /><br />
+										<a href="afficher?id=<?php echo $resultat->id(); ?>"><?php echo $resultat->titre(); ?></a> <small>entré le <?php echo $resultat->date(); ?> par <?php echo $resultat->membre(); ?> dans les catégories <?php echo $resultat->categorie(); ?> <-> <?php echo $resultat->categorie2() ?> (<?php echo $resultat->note() ?>/5)</small><br><br>
 							<?php
 									} // fin de la boucle
 									
@@ -104,8 +105,9 @@ function createListeSelectLangue(){
 							} else { // et voilà le formulaire, en HTML de nouveau !
 							?>
 								<a href="entrer_liste"><img src="images/orange button.png" alt="enter liste" /></a>
-								<div id="text-center"><b><h2>ou chercher une liste :</h2></b>
-								<form action="index" method="Post">
+								<div id="text-center">
+								<b><h2>ou chercher une liste :</h2></b>
+								<form action="accueil" method="Post">
 									<p>
 										<b>Catégorie :</b>
 										<select id="categorie" name="categorie"></select>
@@ -113,9 +115,10 @@ function createListeSelectLangue(){
 										<b>Mots-clés :</b>
 										<input type="text" name="requete" size="30" title="Mots-clés" >
 										<br><br>
-										<input type="submit" value="Recherche"></div>
+										<input type="submit" value="Recherche">
 									</p>
 								</form>
+								</div> 
 							<?php
 							}
 							// et voilà, c'est fini !

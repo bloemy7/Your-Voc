@@ -1,5 +1,5 @@
 <?php
-	include("modelDAO.php");
+	require_once("modelDAO.php");
 	$hostDomain = getProperty("application.host");
 	$redirection = 'Location: http://'.$hostDomain.$_SERVER['REQUEST_URI'];
 	if ($_SERVER['HTTP_HOST'] == "") {		
@@ -11,7 +11,7 @@
 	session_start();
 	dbconnect();
 	
-	include("title.php");
+	require_once("title.php");
 	
 	function getIdCookie(){
 		if (!isset($_SESSION['login']) && !empty($_COOKIE['id']) && !empty($_COOKIE['connexion_auto'])){

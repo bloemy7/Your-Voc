@@ -125,16 +125,16 @@ function insertListeMot($login, $listeMots, $titre, $date, $categorie, $categori
 }
 
 function getCategoriesWithNbListe($nb=0){
-	$categories = getCategories($nb);
+	$categories = getCategories($nb);	
 	$managerListeMot = DBHelper::getDBManager("ListeMotDefinition");
-	foreach($categories as $categorie){
+	foreach($categories as $categorie){		
 		$categorie->setNbListe($managerListeMot->getNbListeByCategorie($categorie->nom()));
 	}
 	return $categories;
 }
 
 function getCategories($nb=0){
-	$categories = getLimiteListe(DBHelper::getDBManager("Categorie"), $nb);
+	$categories = getLimiteListe(DBHelper::getDBManager("Categorie"), $nb);	
 	return $categories;
 }
 function getCategoriesByName($arrayName){

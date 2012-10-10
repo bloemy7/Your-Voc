@@ -41,15 +41,15 @@ abstract class DbManager {
 		$statement = $this->bind($query, $entity);
 		$donnees = $statement->execute();		
 		$entityListe = array();
-		while ($donnees = $statement->fetch(PDO::FETCH_ASSOC)){
-			$entityListe[] = $this->newInstanceEntity($donnees);
-			
+		while ($donnees = $statement->fetch(PDO::FETCH_ASSOC)){			
+			$entityListe[] = $this->newInstanceEntity($donnees);			
 		}
 		return $entityListe;
 	}
 	
-	protected function count($arrayCritere){
-		return sizeof($arrayCritere);
+	protected function count($query, $entity){
+		$liste = $this->select($query, $entity);
+		return sizeof($liste);
 	}
 	
 	protected function countAll(){
@@ -127,10 +127,7 @@ abstract class DbManager {
 		$query = "UPDATE $this->table SET ";
 		$this->setValuesQuery($query, $entity);
 		$this->saveOrUpdate($query);
-	}
-	
-	
-	
+	}	
 	
 	protected function find($query, $arrayCritere){
 		$statement = $this->bind($query, $arrayCritere);
