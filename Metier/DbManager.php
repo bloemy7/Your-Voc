@@ -33,7 +33,7 @@ abstract class DbManager {
 	
 	protected function select($query, $entity){
 		$statement = $this->bind($query, $entity);
-		$donnees = $statement->execute();		
+		$donnees = $statement->execute();	
 		$entityListe = array();
 		while ($donnees = $statement->fetch(PDO::FETCH_ASSOC)){
 			$entityListe[] = $this->newInstanceEntity($donnees);

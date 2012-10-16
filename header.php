@@ -27,6 +27,7 @@
 </div>
 <!--Fin du header !-->
 <?php
+
 // Le mec n'est pas connecté mais les cookies sont là, on y va !
 $id_auto = getIdCookie();
 if($id_auto != null){

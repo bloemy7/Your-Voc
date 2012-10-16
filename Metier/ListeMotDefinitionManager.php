@@ -52,8 +52,10 @@ class ListeMotDefinitionManager extends DbManager {
 	
 	public function getNbListeByCategorie($nomCategorie){
 		$query = "SELECT * FROM ".$this->table." WHERE categorie = :categorie OR categorie2 = :categorie2";
-		$entity = $this->newInstanceEntity(array("categorie"=>$nomCategorie, "categorie2"=>$nomCategorie));	
-		return $this->count($query, $entity);
+		$listMotDef = new ListeMotDefinition();
+		$listMotDef->setCategorie($nomCategorie);
+		$listMotDef->setCategorie2($nomCategorie);
+		return $this->count($query, $listMotDef);
 	}
 	
 	public function getNbListe(){
@@ -99,7 +101,7 @@ class ListeMotDefinitionManager extends DbManager {
 		return $this->select($query, $entity);		
 	}
 	public function getListeByCategorie($categorie){
-		$query = "select * from ".$this->table." where categorie = :categorie";
+		$query = "select * from ".$this->table." where categorie = :categorie";				
 		$entity = new ListeMotDefinition(array("categorie"=>$categorie));
 		return $this->select($query, $entity);
 	}
@@ -107,6 +109,46 @@ class ListeMotDefinitionManager extends DbManager {
 		$query = "select * from ".$this->table." order by (vues + 0)";
 		$entity = new ListeMotDefinition();
 		return $this->select($query, $entity);		
+	}
+	public function rechercheByCriteres($categorie, $recherche_sur, $mots_cles, $critere){
+		$categorie = $categorie;
+		$requete1 = htmlspecialchars(addslashes($mots_cles)); // on crée une variable $requete pour faciliter l'écriture de la requête SQL, mais aussi pour empêcher les éventuels malins qui utiliseraient du PHP ou du JS, avec la fonction htmlspecialchars().
+		$requete = explode(" ", $requete1);
+		$number = count($requete);
+		$query_made = "";
+		for( $i = 0 ; $i < $number ; $i++) {
+			$query_made .= $requete[$i];
+			$query_made .= "%";
+		}
+		$array_decompose = array(
+			"1" => "SELECT * FROM listes_public ",
+			"2" => "WHERE titre LIKE '%$query_made' ",
+			"2a" => "WHERE liste LIKE '%$query_made' ",
+			"2b" => "WHERE (liste LIKE '%$query_made' OR titre LIKE '%$query_made') ",
+			"3" => "AND (categorie = '$categorie' OR categorie2 = '$categorie') ",
+			"3a" => "OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ",
+			"4" => "ORDER BY note DESC",
+			"4a" => "ORDER BY (vues + 0) DESC",
+			"4b" => "ORDER BY pseudo DESC",
+			"4c" => "ORDER BY id DESC"
+		);
+		$partie1 = $array_decompose['1'];
+		if(isset($recherche_sur)){
+			if($recherche_sur == 'titre') { $partie2 = $array_decompose['2']; } elseif($recherche_sur == 'mots'){ $partie2 = $array_decompose['2a']; } elseif($recherche_sur == 'tous'){ $partie2 = $array_decompose['2b']; }
+		}
+		else {
+			$partie2 = $array_decompose['2'];
+		}
+		if($categorie != 'aucun'){ $partie3 = $array_decompose['3']; } else{ $partie3 = $array_decompose['3a']; }
+		if(isset($critere)){
+			if($critere == 'note'){ $partie4 = $array_decompose['4']; } elseif($critere == 'vues'){ $partie4 = $array_decompose['4a']; } elseif($critere == 'pseudo'){ $partie4 = $array_decompose['4b']; } elseif($critere == 'date'){ $partie4 = $array_decompose['4c']; }
+		}
+		else {
+			$partie4 = $array_decompose['4'];
+		}	
+		$query = $partie1.$partie2.$partie3.$partie4;
+		$entity = new ListeMotDefinition();
+		return $this->select($query, $entity);
 	}
 }
 ?>

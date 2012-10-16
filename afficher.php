@@ -1,6 +1,7 @@
 <?php
 setlocale(LC_TIME, 'fr_FR.utf8','fra'); 
 ?>
+<<<<<<< HEAD
 <!-- Début de la présentation -->
 <div id="presentation1">
 </div>

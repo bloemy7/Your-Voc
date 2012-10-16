@@ -271,4 +271,8 @@ function getPassByLogin($login){
 	$membre = DBHelper::getDBManager("Membre")->getPassByLogin($login);
 	return $membre;
 }
+function rechercheByCriteres($categorie, $recherche_sur, $mots_cles, $critere){
+	$liste = DBHelper::getDBManager("ListeMotDefinition")->rechercheByCriteres($categorie, $recherche_sur, $mots_cles, $critere);
+	return $liste;
+}
 ?>

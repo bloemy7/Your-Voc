@@ -36,8 +36,8 @@ function createListeSelectLangue(){
 						<h3>Catégories</h3>
 						<ul type="circle">
 							<?php
-								$allCat = getCategoriesWithNbListe(7);
-								foreach($allCat as $key=>$cat) {
+								$allCat = getCategoriesWithNbListe('7');
+								foreach($allCat as $cat) {
 							?>
 									<li><a href="<?php echo $cat->url() ?>"><?php echo  $cat->nom() ?></a> - <i><?php echo $cat->nbListe() ?> listes </i></li><br />
 							<?php 

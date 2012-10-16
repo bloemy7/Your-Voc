@@ -491,6 +491,7 @@ $(function(){
 					<a href="recherche">Faire une nouvelle recherche</a><br />
 					<form method="post" action="recherche" >
 					<input type="hidden" name="requete" value="<?php echo $query_made ?>" />
+					<input type="hidden" name="sur" value="<?php echo $_POST['sur']; ?>" />					
 					<input type="submit" name="note" value="Trier par note" />
 					<input type="submit" name="vues" value="Trier par popularité" />
 					<input type="submit" name="auteur" value="Trier par auteur" />
