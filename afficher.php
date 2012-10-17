@@ -50,8 +50,10 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 			if(isset($_GET['id']) AND !empty($_GET['id'])) {
 				$time = strftime("%A %d %B %Y %X"); 
 				$id = mysql_real_escape_string($_GET['id']);
-				$fonction = getListeById($id);
-				if(!empty($fonction)) {
+				$listeMotDefinition = getListeById($id);
+				print_r($listeMotDefinition);
+				if(!empty($listeMotDefinition)) {
+					foreach ($listeMotDefinition as $fonction){
 						$titre = $fonction->titre();
 						$categorie = $fonction->categorie();
 						$categorie2 = $fonction->categorie2();
@@ -311,7 +313,7 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 					      ?>
 						<input type="submit" name="submit" value="Envoyer" /></p></form><br />
 						<div></center><?php
-					
+					}
 				}
 				else {
 					echo 'Veuillez préciser un id valable svp.';

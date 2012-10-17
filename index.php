@@ -1,5 +1,5 @@
 <?php
-	include("controller.php"); 
+	require_once("controller.php"); 
 	$configPage = getConfigPage();		
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -31,10 +31,10 @@
 		<meta name="google-site-verification" content="pErt4j5t31fEifaia0V_gUs2DelP-DSnU0KxKdnvBnA" />
     </head>
 	<body>
-		<?php include("header.php");?>
+		<?php require_once("header.php");?>
 		
-		<?php include($configPage->pageName()); ?>
+		<?php require_once($configPage->pageName()); ?>
 				
-		<?php include("footer.php"); ?>
+		<?php require_once("footer.php"); ?>
 	</body>
 </html>

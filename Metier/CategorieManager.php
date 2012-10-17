@@ -16,7 +16,7 @@ class CategorieManager extends DbManager{
 		$this->arrayBinding["nbListe"] = "nbListe";		
 	}
 	
-	protected function newInstanceEntity($donnees){
+	protected function newInstanceEntity($donnees){	
 		return new Categorie($donnees);
 	}
 	
@@ -38,7 +38,7 @@ class CategorieManager extends DbManager{
 		}		
 		return $entityListe;
 	}
-	
+
 	public function getCategorieById($id){
 		$query = "select * from ".$this->table." where id = :id" ;
 		$entity = new Categorie(array("id"=>$id));
