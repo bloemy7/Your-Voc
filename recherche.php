@@ -10,7 +10,7 @@ $(function(){
       this.value= this.value==='' ? save : this.value;
     };
   });
-  createListeSelectLangue();
+  createListeSelectLangue("categorie");
 });
 </script>
 <!-- Début de la présentation -->

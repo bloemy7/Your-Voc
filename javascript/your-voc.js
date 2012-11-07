@@ -267,8 +267,8 @@ function createListeButtonCharSpec(parentElement){
 	parentElement.appendChild(container);
 }
 
-function createListeSelectLangue(){
-	var selectCateg = $("#categorie")[0];
+function createListeSelectLangue(idSelect){
+	var selectCateg = $("#" + idSelect)[0];
 	var optionTout = createElem({tag:'option', value:"aucun"});
 	optionTout.appendChild(createElem({tag:'text', text:"Toutes"}));
 	selectCateg.appendChild(optionTout);

@@ -1,16 +1,8 @@
 <script type="text/javascript">
 $(function(){
-	createListeSelectLangue();
+	createListeSelectLangue("categorie");
 });
 
-function createListeSelectLangue(){
-	var selectCateg = $("#categorie")[0];
-	var optionTout = createElem({tag:'option', value:"aucun"});
-	optionTout.appendChild(createElem({tag:'text', text:"Toutes"}));
-	selectCateg.appendChild(optionTout);
-	createOptionsLangue(selectCateg);
-	selectCateg.options[0].selected = "true";
-}
 </script>
         <!-- Début de la présentation -->
         <div id="presentation">
@@ -75,7 +67,7 @@ function createListeSelectLangue(){
 									<h3>Résultats de votre recherche.</h3>
 									<?php echo $writeResult;?>
 									<br/><br/>
-							<?php
+							<?php							
 									$i = 1;
 									foreach($resultats as $resultat){
 										echo $i++;
