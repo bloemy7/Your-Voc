@@ -65,7 +65,7 @@ function close(){
 		if($nb_resultats != 0) {
 			$writeResult = $nb_resultats." résultat";
 			$writeResult .= ($nb_resultats > 1)?"s":"";
-			echo print_r($resultats);
+			echo $resultats;
 		}
 	?>
 	</body>

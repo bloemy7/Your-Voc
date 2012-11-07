@@ -56,8 +56,6 @@ function createListeSelectLangue(){
 								$categorie = "aucun";
 								if($_POST['categorie'] != 'aucun') {
 									$categorie = $_POST['categorie'];
-								} else {
-									$categorie = $critere;
 								}		
 								$critereListeMot = array("titre"=>$critere, "categorie"=>$categorie,"categorie2"=>$categorie);
 								$resultats = getListeMotByCritere($critereListeMot);
@@ -68,7 +66,7 @@ function createListeSelectLangue(){
 									if($nb_resultats < 6) {
 										$writeResult = "<br>Voici les listes que nous avons trouvées :<br />";
 									}else{
-										$resultats = array_slice($resultats, 5, 5);
+										$resultats = array_slice($resultats, 1, 5);
 										$pluriel = ($nb_resultats > 1)?"s":"";
 										$writeResult = "Nous avons trouvé $nb_resultats résultat$pluriel dans notre base de données.";
 										$writeResult = "Voici 5 des $nb_resultats listes que nous avons trouvées:";
@@ -78,16 +76,17 @@ function createListeSelectLangue(){
 									<?php echo $writeResult;?>
 									<br/><br/>
 							<?php
+									$i = 1;
 									foreach($resultats as $resultat){
-										echo ($key+1).". " ;
+										echo $i++;
 							?>
-										<a href="afficher?id=<?php echo $resultat->id(); ?>"><?php echo $resultat->titre(); ?></a> <small>entré le <?php echo $resultat->date(); ?> par <?php echo $resultat->membre(); ?> dans les catégories <?php echo $resultat->categorie(); ?> <-> <?php echo $resultat->categorie2() ?> (<?php echo $resultat->note() ?>/5)</small><br><br>
+										<a href="afficher?id=<?php echo $resultat->id(); ?>"><?php echo $resultat->titre(); ?></a> <small>entré le <?php echo $resultat->date(); ?> par <?php echo $resultat->membre(); ?> dans les catégories <?php echo $resultat->categorie(); ?> <-> <?php echo $resultat->categorie2() ?> (<?php echo ($resultat->note() != "")?$resultat->note()."/5":"Pas de note"?>)</small><br><br>
 							<?php
 									} // fin de la boucle
 									
 									if($nb_resultats > 5) {
 							?>
-										<i><a href="recherche?id=<?php echo $critere ?>&cat=<?php echo $categorie ?>">Voir la suite des résultats</a></i>
+										<i><a href="recherche?requete=<?php echo $critere ?>&categorie=<?php echo $categorie ?>">Voir la suite des résultats</a></i>
 										<br/>
 										<br/>
 							<?php 

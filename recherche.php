@@ -22,497 +22,46 @@ $(function(){
 		<div id="text-center">
             <div id="title">Recherche </div>
 			<?php
-			if(isset($_POST['requete']) && $_POST['requete'] != NULL OR isset($_GET['id'])) // on vérifie d'abord l'existence du POST et aussi si la requete n'est pas vide.
-			{
-				if(isset($_GET['id'])){
-					$query_made = htmlspecialchars(addslashes($_GET['id']));
-				}
-				else {
-					$requete1 = htmlspecialchars(addslashes($_POST['requete'])); // on crée une variable $requete pour faciliter l'écriture de la requête SQL, mais aussi pour empêcher les éventuels malins qui utiliseraient du PHP ou du JS, avec la fonction htmlspecialchars().
-					$requete = explode(" ", $requete1);
-					$number = count($requete);
-					$query_made = "";
-					for( $i = 0 ; $i < $number ; $i++) {
-						$query_made .= $requete[$i];
-						$query_made .= "%";
-					}
-				}
-				if(isset($_POST['categorie'])) {
-					if($_POST['categorie'] != 'aucun') {
-						$categorie = addslashes($_POST['categorie']);
-						if(isset($_POST['note'])) {
-							$classe = 'note';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								else {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}				
-							}
-						}
-						elseif(isset($_POST['vues'])) {
-							$classe = 'catégorie';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								else {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}				
-							}		
-						}
-						elseif(isset($_POST['auteur'])) {
-							$classe = 'auteur';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie')  ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								else {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}				
-							}		
-						}
-						elseif(isset($_POST['date'])) {
-							$classe = 'date de mise en ligne';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								else {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}				
-							}	
-						}
-						else {
-							$classe = 'note';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								else {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}				
-							}
-						}
-					}
-					else {
-						if(isset($_POST['note'])) {
-							$classe = 'note';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}	
-						}
-						elseif(isset($_POST['vues'])) {
-							$classe = 'catégorie';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}	
-						}
-						elseif(isset($_POST['auteur'])) {
-							$classe = 'auteur';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}					
-						}
-						elseif(isset($_POST['date'])) {
-							$classe = 'date de mise en ligne';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}	
-						}
-						else {
-							$classe = 'note';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}	
-						}
-					}
-				}
-				elseif(isset($_GET['cat'])) {
-					if($_GET['cat'] != 'aucun') {
-						$categorie = addslashes($_GET['cat']);
-						if(isset($_POST['note'])) {
-							$classe = 'note';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}			
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}	
-						}
-						elseif(isset($_POST['vues'])) {
-							$classe = 'catégorie';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}			
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}	
-						}
-						elseif(isset($_POST['auteur'])) {
-							$classe = 'auteur';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}			
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}	
-						}
-						elseif(isset($_POST['date'])) {
-							$classe = 'date de mise en ligne';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}				
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}
-						}
-						else {
-							$classe = 'note';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}			
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' AND (categorie = '$categorie' OR categorie2 = '$categorie') ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}	
-						}
-					}
-					else {
-						if(isset($_POST['note'])) {
-							$classe = 'note';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}	
-						}
-						elseif(isset($_POST['vues'])) {
-							$classe = 'catégorie';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}	
-						}
-						elseif(isset($_POST['auteur'])) {
-							$classe = 'auteur';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}					
-						}
-						elseif(isset($_POST['date'])) {
-							$classe = 'date de mise en ligne';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}	
-						}
-						else {
-							$classe = 'note';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}	
-						}
-					}
-				}
-				else {
-						if(isset($_POST['note'])) {
-							$classe = 'note';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}	
-						}
-						elseif(isset($_POST['vues'])) {
-							$classe = 'catégorie';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY (vues + 0) DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}	
-						}
-						elseif(isset($_POST['auteur'])) {
-							$classe = 'auteur';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY pseudo DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}					
-						}
-						elseif(isset($_POST['date'])) {
-							$classe = 'date de mise en ligne';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY id DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}	
-						}
-						else {
-							$classe = 'note';
-							if(isset($_POST['sur'])) {
-								if($_POST['sur'] == 'titre') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'mots') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-								elseif($_POST['sur'] == 'tous') {
-									$query = mysql_query("SELECT * FROM listes_public WHERE liste LIKE '%$query_made' OR titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-								}
-							}
-							else {
-								$query = mysql_query("SELECT * FROM listes_public WHERE titre LIKE '%$query_made' OR categorie LIKE '%$query_made' OR categorie2 LIKE '%$query_made' ORDER BY note DESC") or die (mysql_error()); // la requête, que vous devez maintenant comprendre ;)
-							}	
-						}
-				}
-				$nb_resultats = mysql_num_rows($query); // on utilise la fonction mysql_num_rows pour compter les résultats pour vérifier par après
-				if($nb_resultats != 0) // si le nombre de résultats est supérieur à 0, on continue
+			if(isset($_POST['requete']) && $_POST['requete'] != NULL OR isset($_GET['requete'])) {
+				$categorie = (isset($_POST['categorie']))?$_POST['categorie']:$_GET['categorie'];
+				$critere = (isset($_POST['sur']))?$_POST['sur']:"titre";
+				$search = (isset($_POST['requete']))?$_POST['requete']:$_GET['requete'];
+				$tri = (isset($_POST['critere']))?$_POST['critere']:"note";
+				$resultats = rechercheByCriteres($categorie, $critere, $search, $tri); 
+				// on utilise la fonction mysql_num_rows pour compter les résultats pour vérifier par après
+				$nb_resultats = sizeof($resultats);
+				if(!empty($resultats)) // si le nombre de résultats est supérieur à 0, on continue
 				{
 					// maintenant, on va afficher les résultats et la page qui les donne ainsi que leur nombre, avec un peu de code HTML pour faciliter la tâche.
 					?>
 					<h3>Résultats de votre recherche.</h3>
-					<p>Nous avons trouvé <?php echo $nb_resultats; // on affiche le nombre de résultats 
-					if($nb_resultats > 1) { echo ' résultats'; } else { echo ' résultat'; } // on vérifie le nombre de résultats pour orthographier correctement. 
-					?>
-					dans notre base de données. Voici les listes que nous avons trouvées, classées par <?php echo $classe ?> :<br/>
+					<p>Nous avons trouvé <?php echo $nb_resultats ?>résultat<?php echo ($nb_resultats > 1)?"s":""; ?>
+					dans notre base de données. Voici les listes que nous avons trouvées, classées par <?php echo 'note' ?> :<br/>
 					<a href="recherche">Faire une nouvelle recherche</a><br />
-					<form method="post" action="recherche" >
-					<input type="hidden" name="requete" value="<?php echo $query_made ?>" />
-<<<<<<< HEAD
-					<input type="hidden" name="sur" value="<?php echo $_POST['sur']; ?>" />					
-=======
->>>>>>> refs/remotes/origin/master
-					<input type="submit" name="note" value="Trier par note" />
-					<input type="submit" name="vues" value="Trier par popularité" />
-					<input type="submit" name="auteur" value="Trier par auteur" />
-					<input type="submit" name="date" value="Trier par date de mise en ligne" />
+					<form method="post" action="test" >
+					<input type="hidden" name="requete" value="<?php echo $_POST['requete'] ?>" />
+					<input type="hidden" name="sur" value="<?php echo $_POST['sur']; ?>" />
+					<input type="hidden" name="categorie" value="<?php echo $_POST['categorie']?>" />
+					<select name="critere" onchange='this.form.submit()'>
+						<option>Trier par?</option>
+						<option value="note">Trier par note</option>
+						<option value="vues">Trier par popularité</option>
+						<option value="pseudo">Trier par auteur</option>
+						<option value="date">Trier par date de mise en ligne</option>
+					</select>
 					</form><br />
 					<p>
 					<?php
 					$i = 1;
-					while($donnees = mysql_fetch_array($query)) // on fait un while pour afficher la liste des fonctions trouvées, ainsi que l'id qui permettra de faire le lien vers la page de la fonction
-					{
-						?><li><?php
-						echo "".$i.". ";
+					foreach($resultats as $donnees) {
+					?><li><?php
+						echo "".$i.".";
 						?>
-						<a href="afficher?id=<?php echo $donnees['id']; ?>"><?php echo $donnees['titre']; ?></a> <small>entré le <?php echo $donnees['date'] ?><br/>
-						par <a href="profil?m=<?php echo $donnees['pseudo']?>"><?php echo $donnees['pseudo']?></a> dans les catégories <?php echo $donnees['categorie'] ?> <-> <?php echo $donnees['categorie2'] ?>  (<?php echo $donnees['note'] ?>/5) (<?php echo $donnees['vues'] ?> vues)</small></li><br /><br />
+						<a href="afficher?id=<?php echo $donnees->id(); ?>"><?php echo $donnees->titre(); ?></a> <small>entré le <?php echo $donnees->date() ?><br/>
+						par <a href="profil?m=<?php echo $donnees->membre()?>"><?php echo $donnees->membre() ?></a> dans les catégories <?php echo $donnees->categorie() ?> <-> <?php echo $donnees->categorie2() ?>  (<?php echo $donnees->note() ?>/5) (<?php echo $donnees->vue() ?> vues)</small></li><br /><br />
 						<?php
 						$i++;
-					} // fin de la boucle
+					} 
 					?><br/>
 					<br/>
 					<a href="recherche">Faire une nouvelle recherche</a></p>
@@ -522,14 +71,14 @@ $(function(){
 				{ // de nouveau, un peu de HTML
 					?>
 					<h3>Pas de résultats</h3>
-					<p>Nous n'avons trouvé aucun résultat pour votre requête "<?php  echo (isset($_POST['requete']))? htmlspecialchars($_POST['requete']):htmlspecialchars($_GET['id']) ?>". <a href="recherche">Réessayez</a> avec autre chose.</p>
+					<p>Nous n'avons trouvé aucun résultat pour votre requête "<?php  echo $search ?>". <a href="recherche">Réessayez</a> avec autre chose.</p>
 					<?php
 				}// Fini d'afficher l'erreur ^^
 			}
 			else { // et voilà le formulaire, en HTML de nouveau !
 				?>
 				<p>Vous allez faire une recherche dans notre base de données concernant les listes publiques.</p>
-				 <form action="recherche" method="Post">
+				 <form action="test" method="Post">
 				 <p>
 				<?php echo "		Sur quelle catégorie souhaitez vous effectuer la recherche?				 
 														<select name=\"categorie\">

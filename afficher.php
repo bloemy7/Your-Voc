@@ -1,7 +1,6 @@
 <?php
 setlocale(LC_TIME, 'fr_FR.utf8','fra'); 
 ?>
-<<<<<<< HEAD
 <!-- Début de la présentation -->
 <div id="presentation1">
 </div>
@@ -51,7 +50,6 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 				$time = strftime("%A %d %B %Y %X"); 
 				$id = mysql_real_escape_string($_GET['id']);
 				$listeMotDefinition = getListeById($id);
-				print_r($listeMotDefinition);
 				if(!empty($listeMotDefinition)) {
 					foreach ($listeMotDefinition as $fonction){
 						$titre = $fonction->titre();

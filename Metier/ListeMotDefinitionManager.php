@@ -73,12 +73,12 @@ class ListeMotDefinitionManager extends DbManager {
 			$entityCritere->setTitre("%".$critere['titre']."%");
 		}
 		if(isset($critere['categorie'])){
-			$query.=" or categorie like :categorie";
-			$entityCritere->setCategorie("%".$critere['categorie']."%");
+			$query.=" or categorie = :categorie";
+			$entityCritere->setCategorie($critere['categorie']);
 		}
 		if(isset($critere['categorie2'])){
-			$query.=" or categorie2 like :categorie2";
-			$entityCritere->setCategorie2("%".$critere['categorie2']."%");
+			$query.=" or categorie2 = :categorie2";
+			$entityCritere->setCategorie2($critere['categorie2']);
 		}
 		return $this->select($query, $entityCritere);
 	}

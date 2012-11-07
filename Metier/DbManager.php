@@ -38,7 +38,7 @@ abstract class DbManager {
 	}
 	
 	protected function select($query, $entity){
-		$statement = $this->bind($query, $entity);
+		$statement = (isset($entity))?$this->bind($query, $entity):$this->_db->prepare($query);
 		$donnees = $statement->execute();	
 		$entityListe = array();
 		while ($donnees = $statement->fetch(PDO::FETCH_ASSOC)){			
