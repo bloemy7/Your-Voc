@@ -58,7 +58,7 @@ function getMembre($login, $mdp){
 		$liste = DBHelper::getDBManager("Membre")->getMembreByLogin($login);
 		$result = "Votre identifiant est inconnu, merci de vous inscrire pour vous connecter";
 		if(count($liste) == 1){
-			$result = $liste;
+			$result = $liste[0];
 			if(md5($mdp) != $result->pass()){
 				$result = "Votre mot de passe est incorrect";
 			}
@@ -274,5 +274,10 @@ function getPassByLogin($login){
 function rechercheByCriteres($categorie, $recherche_sur, $mots_cles, $critere){
 	$liste = DBHelper::getDBManager("ListeMotDefinition")->rechercheByCriteres($categorie, $recherche_sur, $mots_cles, $critere);
 	return $liste;
+}
+function createMembre($pseudo, $email, $password){
+	$membre = new Membre(array("login"=>$pseudo, "pass_md5"=>$password, "email"=>$email));
+	DBHelper::getDBManager("Membre")->saveMembre($pseudo, $email, $password);
+	return $membre;
 }
 ?>

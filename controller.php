@@ -43,4 +43,16 @@
 	function getHash($login, $id){
 		return sha1('yes'.$login.'set'.$id.'treb'.getNavigateur().'crac');
 	}
+	
+	function isValidMail($mail){
+		return !empty($mail) && preg_match("/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i",$mail);
+	}
+	
+	function isValidPseudo($pseudo){
+		 return !empty($pseudo) && preg_match('/^[a-z\d_]{5,20}$/i', $pseudo);
+	}
+	
+	function isValidPassword($password){
+		return !empty($password) && preg_match("/^[a-z0-9_-]{6,40}$/i", $password);
+	}
 ?>

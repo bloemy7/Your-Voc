@@ -40,5 +40,11 @@ class MembreManager extends DbManager{
 		$entity = new Membre(array("login"=>$login));
 		return $this->select($query, $entity);
 	}
+	
+	public function saveMembre($pseudo, $email, $password){		
+		$query = "insert into ".$this->table." values('', '".$pseudo."', '".$password."', '".$email."')" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
+	}
 }
 ?>
