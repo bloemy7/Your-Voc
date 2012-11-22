@@ -22,54 +22,45 @@
 											  $_POST["recaptcha_response_field"]);
 			
 				if (!$resp->is_valid) {
-				// What happens when the CAPTCHA was entered incorrectly
-				echo ("Le captcha n'a pas été entré correctement. Veuillez réessayer. <br /><br />");
-				} else {
+					// What happens when the CAPTCHA was entered incorrectly
+					echo ("Le captcha n'a pas été entré correctement. Veuillez réessayer. <br /><br />");
+				}else{
 						// on teste l'existence de nos variables. On teste également si elles ne sont pas vides
-						if ((isset($_POST['login']) && !empty($_POST['login'])) && (isset($_POST['pass']) && !empty($_POST['pass'])) && (isset($_POST['pass_confirm']) && !empty($_POST['pass_confirm'])) && (isset($_POST['email']) && !empty($_POST['email']))) {
+						if (isset($_POST['login']) && isset($_POST['pass']) && isset($_POST['pass_confirm']) && isset($_POST['email'])) {
 							// on teste les deux mots de passe
-							if ($_POST['pass'] != $_POST['pass_confirm']) {
+							if ($_POST['pass'] != $_POST['pass_confirm']) {						
 								$erreur = 'Les 2 mots de passe sont différents.';
 							}
-							else {
+							if(!isValidPassword($_POST['pass'])){
+								$erreur = 'Votre mot de passe est invalide. Caractères spéciaux non-autorisés.';
+							}else{
 									// on recherche si ce login est déjà utilisé par un autre membre
 									$login = mysql_escape_string($_POST['login']);
-									$fonction = getMembreByLogin($login);			
-									if (empty($fonction)) {
-										if(!ereg('^[-!#$%&\'*+\./0-9=?A-Z^_`a-z{|}~]+'.
-										'@'.
-										'[-!#$%&\'*+\/0-9=?A-Z^_`a-z{|}~]+\.'.
-										'[-!#$%&\'*+\./0-9=?A-Z^_`a-z{|}~]+$',
-										$_POST['email'])){
+									$membre = getMembreByLogin($login);			
+									if (empty($membre)) {
+										if(!isValidMail($_POST['email'])){
 											$erreur = 'L\'email entré est invalide.';
-										}
-										else {
-											$regex = '/^[a-z\d_]{5,20}$/i';
-											if(!preg_match($regex, $_POST['login'])) {
+										}else {
+											if(!isValidPseudo($_POST['login'])) {
 												$erreur = 'Votre pseudo est invalide. Caractères autorisés: lettres, chiffres,et _! Minimum 5 caractères, maximum 20.';
-											}
-											else {
+											}else{
 												$email = mysql_escape_string($_POST['email']);
 												$fonction1 = getMembreByEmail($email);
 												if (empty($fonction1)) {
-												$sql = 'INSERT INTO membre VALUES("", "'.mysql_escape_string($_POST['login']).'", "'.mysql_escape_string(md5($_POST['pass'])).'", "'.mysql_escape_string($_POST['email']).'")';
-												mysql_query($sql) or die('Erreur SQL !'.$sql.'<br />'.mysql_error());
+												createMembre($_POST['login'], $_POST['email'], md5($_POST['pass']));
 												$_SESSION['login'] = $_POST['login'];
 												header('Location: membre');
 												exit();
-												}
-												else {
+												}else{
 													$erreur = 'Un membre possède déjà cet email.';
 												}
 											}
 										}
-									}
-									else {
+									}else{
 										$erreur = 'Un membre possède déjà ce login.';
 									}
 								}
-							}
-							else {
+							}else {
 								$erreur = 'Au moins un des champs est vide.';
 							}
 						}

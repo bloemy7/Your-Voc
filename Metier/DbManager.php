@@ -58,8 +58,9 @@ abstract class DbManager {
 		return $statement->execute()->fetchColumn();;
 	}
 	
-	private function saveOrUpdate($query, $entity){
-		$statement = $this->bind($query, $entity);
+	private function save($entity){
+		
+		$statement = $this->bind($entity);
 		$this->_db->beginTransaction();
 // 		$this->_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 // 		$error = $this->_db->errorInfo();
