@@ -38,11 +38,9 @@ function getHTML_Etape2() {
 		$time = strftime("%A %d %B %Y %H:%M:%S");
 		if(strlen($commentaire) > 300) {
 			$html = 'Votre commentaire est trop long. Veuillez réessayer.';
-		}
-		else if(!isset($mots) OR empty($mots)) {
+		} else if(!isset($mots) OR empty($mots)) {
 			$html = 'Veuillez entrer vos mots correctement <a href="entrer_liste">ici</a>';
-		}
-		else if(!isset($titre) OR empty($titre)) {
+		} else if(!isset($titre) OR empty($titre)) {
 			$html = 'Veuillez préciser un titre! <a href="entrer_liste">Retour</a>';
 		} else if(isset($time) OR !empty($time)) {
 			$titre = strip_tags(mysql_real_escape_string($titre));
@@ -57,56 +55,53 @@ function getHTML_Etape2() {
 		else {
 			$html = 'time beug';
 		}
-    }else {
+    } else {
     	$html = 'Erreur : Aucun mot valide';
+    	
     }
-
     return $html ;
- }
+}
 	
 	
-	$content = "";
-	$etape = "etape1";
-	if(isset($_SESSION['login'])){
-		if(@$_POST['step'] == "2") {
-			$etape = "etape2";
-			$content = getHTML_Etape2();
-		}else {
-			$content = initMot();
-		}
-	}else{
-		$etape = "nonConnecte";
+$content = "";
+$etape = "etape1";
+if(isset($_SESSION['login'])){
+	if(@$_POST['step'] == "2") {
+		$etape = "etape2";
+		$content = getHTML_Etape2();
+	}else {
+		$content = initMot();
 	}
+}else{
+	$etape = "nonConnecte";
+}
 ?>
     <script type="text/javascript">
-		$(function(){		
+		$(function(){	
 			if($("#etape1").length >0){
-				createListeButtonCharSpec($('#rowSpecChar')[0]);	
-				createListeSelectLangue();
+				createListeButtonCharSpec($('#rowSpecChar')[0]);						
 			}
+			createListeSelectLangue("categorie", 1);
+			createListeSelectLangue("categorie2", 2);
+			createLigneMotTraduction();	
 		});
 		
 		function toucheclavier(touche) {
 			if(document.clavier.choix.value==1) document.clavier.mots.value+=touche;
 		}
 		
-		function createListeSelectLangue(){
-			var selectCateg = $("#categorie")[0];
-			var selectCateg2 = $("#categorie2")[0];
-			createOptionsLangue(selectCateg);
-			createOptionsLangue(selectCateg2);
-			selectCateg.options[0].selected = "true";
-			selectCateg2.options[1].selected = "true";
-		}
 		
 		function createLigneMotTraduction(){
-			var table = $("#listeMots")[0];
+			var table = $("#listeMots");
 			var row = createElem({tag:'tr'});
-			var cell0 = createElem({tag:'td', width:"200"});
-			var cell1 = createElem({tag:'td', width:"320"});
-			var cell1 = createElem({tag:'td', width:"400"});
-			var mot = createElem({tag:'input', width:""});
-			table.addRow();
+			var tabdef = [{tooltip:"", width:"200"},{tooltip:"", width:"320"},{tooltip:"", width:"400"}];
+			for(var i = 0; i< tabdef.length; i++){
+				var cell = createElem({tag:'td', width:tabdef.width});
+				var mot = createElem({tag:'input', width:""});
+				cell.appendChild(mot);
+				row.appendChild(cell);
+			}
+			table.append(row).css({margin:"auto"});
 		}
 
 		function ajouterMot(imgElem){
@@ -158,6 +153,8 @@ function getHTML_Etape2() {
 					<br><br>
 					<textarea name="commentaire" rows="2" cols="70">Commentaire de l'auteur concernant la liste en général. (optionnel - maximum 300 caractères)</textarea><br />
 					<input type="submit" name="valider" value="ok" />
+					
+					<table id="listeMots"></table>
 				<?php 
 					}else if($etape == "etape2"){
 						echo $content;

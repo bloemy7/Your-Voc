@@ -15,9 +15,10 @@ Array.prototype.indexOf = function(obj){
 	}
 	return -1;
 }
+
 Array.prototype.remove = function(obj){
 	var l = this.length;
-	var replace = false
+	var replace = false;
 	for(var i=0; i<l; i++){
 		if(this[i] == obj){
 			replace = true;
@@ -30,6 +31,7 @@ Array.prototype.remove = function(obj){
 		this.pop();
 	}
 }
+
 Array.prototype.insert = function(p_index, newObj){
 	var l = this.length;
 	var precObj = null;
@@ -267,11 +269,14 @@ function createListeButtonCharSpec(parentElement){
 	parentElement.appendChild(container);
 }
 
-function createListeSelectLangue(idSelect){
+function createListeSelectLangue(idSelect, indexSelected){
 	var selectCateg = $("#" + idSelect)[0];
 	var optionTout = createElem({tag:'option', value:"aucun"});
 	optionTout.appendChild(createElem({tag:'text', text:"Toutes"}));
 	selectCateg.appendChild(optionTout);
 	createOptionsLangue(selectCateg);
-	selectCateg.options[0].selected = "true";
+	if(!indexSelected){
+		indexSelected = 0;
+	}
+	selectCateg.options[indexSelected].selected = "true";
 }
