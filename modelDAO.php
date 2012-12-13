@@ -8,6 +8,16 @@ require "/Metier/ListeMotDefinition.php";
 require "/Metier/ListeMotDefinitionManager.php";
 require "/Metier/Membre.php";
 require "/Metier/MembreManager.php";
+require "/Metier/Commentaire.php";
+require "/Metier/CommentaireManager.php";
+require "/Metier/Erreur.php";
+require "/Metier/ErreurManager.php";
+require "/Metier/Favori.php";
+require "/Metier/FavoriManager.php";
+require "/Metier/Revision.php";
+require "/Metier/RevisionManager.php";
+require "/Metier/Vote.php";
+require "/Metier/VoteManager.php";
 
 function dbconnect(){
 	dbConfiguration();
@@ -32,6 +42,11 @@ function dbConfiguration(){
 	DBHelper::addManager(new CategorieManager());
 	DBHelper::addManager(new ListeMotDefinitionManager());
 	DBHelper::addManager(new MembreManager());
+	DBHelper::addManager(new VoteManager());
+	DBHelper::addManager(new RevisionManager());
+	DBHelper::addManager(new FavoriManager());
+	DBHelper::addManager(new ErreurManager());
+	DBHelper::addManager(new CommentaireManager());
 }
 
 function getProperty($propertyName){
@@ -279,5 +294,85 @@ function createMembre($pseudo, $email, $password){
 	$membre = new Membre(array("login"=>$pseudo, "pass_md5"=>$password, "email"=>$email));
 	DBHelper::getDBManager("Membre")->saveMembre($pseudo, $email, $password);
 	return $membre;
+}
+function getVotesById($id){
+	$votes = DBHelper::getDBManager("Vote")->getVotesById($id);
+	return $votes;
+}
+function createVote($id_liste, $note, $pseudo){
+	$vote = new Vote(array("id_liste"=>$id_liste, "note"=>$note, "pseudo"=>$pseudo));
+	DBHelper::getDBManager("Vote")->createVote($id_liste, $note, $pseudo);
+	return $vote;
+}
+function getVotesByIdAndPseudo($id, $pseudo){
+	$votes = DBHelper::getDBManager("Vote")->getVotesByIdAndPseudo($id, $pseudo);
+	return $votes;
+}
+function createFavori($id_liste, $pseudo){
+	$favori = new Favori(array("id_liste"=>$id_liste, "pseudo"=>$pseudo));
+	DBHelper::getDBManager("Favori")->createFavori($id_liste, $pseudo);
+	return $favori;
+}
+function updateNoteInListe($id_liste, $note){
+	$liste = new ListeMotDefinition(array("id_liste"=>$id_liste, "note"=>$note));
+	DBHelper::getDBManager("ListeMotDefinition")->updateNoteInListe($id_liste, $note);
+	return $liste;
+}
+function getFavoriByIdAndPseudo($id_liste, $membre){
+	$favori = DBHelper::getDBManager("Favori")->getFavoriByIdAndPseudo($id_liste, $membre);
+	return $favori;
+}
+function deleteFavoriByIdAndMembre($id_liste, $membre){
+	$favori = new Favori(array("id_liste"=>$id_liste, "membre"=>$membre));
+	DBHelper::getDBManager("Favori")->deleteFavoriByIdAndMembre($id_liste, $membre);
+	return $favori;
+}
+function countNbCommentairesById($id_liste){
+	$nbCommentaire = DBHelper::getDBManager("Commentaire")->countNbCommentairesById($id_liste);
+	return $nbCommentaire;	
+}
+function getCommentairesById($id_liste){
+	$commentaires = DBHelper::getDBManager("Commentaire")->getCommentairesById($id_liste);
+	return $commentaires;	
+}
+function createCommentaire($id_liste, $pseudo, $time, $commentaire){
+	$createCommentaire = new Commentaire(array("id_liste"=>$id_liste, "pseudo"=>$pseudo, "date"=>$time, "commentaire"=>$commentaire));
+	DBHelper::getDBManager("Commentaire")->createCommentaire($id_liste, $pseudo, $time, $commentaire);
+	return $createCommentaire;
+}
+function deleteListeByIdAndPseudo($id, $pseudo){
+	$deleteListe = new ListeMotDefinition(array("id_liste"=>$id, "pseudo"=>$pseudo));
+	DBHelper::getDBManager("ListeMotDefinition")->deleteListeByIdAndPseudo($id, $pseudo);
+	return $deleteListe;	
+}
+function updateListe($mot, $categorie, $categorie2, $titre, $id, $pseudo, $commentaire){
+	$updateListe = new ListeMotDefinition(array("id"=>$id, "pseudo"=>$pseudo, "categorie"=>$categorie, "categorie2"=>$categorie2, "liste"=>$mot, "titre"=>$titre, "commentaire"=>$commentaire));
+	DBHelper::getDBManager("ListeMotDefinition")->updateListe($mot, $categorie, $categorie2, $titre, $id, $pseudo, $commentaire);
+	return $updateListe;	
+}
+function updateMdpByLogin($mdp, $pseudo){
+	$updateMdp = new Membre(array("pass_md5"=>$mdp, "pseudo"=>$pseudo));
+	DBHelper::getDBManager("Membre")->updateMdpByLogin($mdp, $pseudo);
+	return $updateMdp;	
+}
+function getRevisionsByPseudoLimit20($pseudo){
+	$revisions = DBHelper::getDBManager("Revision")->getRevisionsByPseudoLimit20($pseudo);
+	return $revisions;	
+}
+function getFavoriByPseudo($membre){
+	$favori = DBHelper::getDBManager("Favori")->getFavoriByPseudo($membre);
+	return $favori;
+}
+function getFavoriByPseudoLimit20($membre){
+	$favori = DBHelper::getDBManager("Favori")->getFavoriByPseudoLimit20($membre);
+	return $favori;
+}
+function getFavoriByPseudoLimit50($membre){
+	$favori = DBHelper::getDBManager("Favori")->getFavoriByPseudoLimit50($membre);
+	return $favori;
+}
+function getRevisionsByPseudoLimit3($pseudo){
+	$revisions = DBHelper::getDBManager("Revision")->getRevisionsByPseudoLimit3($pseudo);
+	return $revisions;
 }
 ?>

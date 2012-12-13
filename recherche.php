@@ -39,7 +39,7 @@ $(function(){
 					<p>Nous avons trouvé <?php echo $nb_resultats ?>résultat<?php echo ($nb_resultats > 1)?"s":""; ?>
 					dans notre base de données. Voici les listes que nous avons trouvées, classées par <?php echo 'note' ?> :<br/>
 					<a href="recherche">Faire une nouvelle recherche</a><br />
-					<form method="post" action="test" >
+					<form method="post" action="recherche" >
 					<input type="hidden" name="requete" value="<?php echo $_POST['requete'] ?>" />
 					<input type="hidden" name="sur" value="<?php echo $_POST['sur']; ?>" />
 					<input type="hidden" name="categorie" value="<?php echo $_POST['categorie']?>" />
@@ -79,7 +79,7 @@ $(function(){
 			else { // et voilà le formulaire, en HTML de nouveau !
 				?>
 				<p>Vous allez faire une recherche dans notre base de données concernant les listes publiques.</p>
-				 <form action="test" method="Post">
+				 <form action="recherche" method="Post">
 				 <p>Sur quelle catégorie souhaitez vous effectuer la recherche?				 
 				<select id="categorie" name="categorie"></select>
 				Faire la recherche sur : <select name="sur" >

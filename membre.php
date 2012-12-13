@@ -57,28 +57,30 @@
 						</p>
 						<h3>3 dernières listes révisées</h3>
 						<?php
-						$requete = mysql_query("SELECT * FROM revise WHERE pseudo = '$pseudo' ORDER BY id DESC LIMIT 3");
+						$requete = getRevisionsByPseudoLimit3($pseudo);
 						$i = 1;
-						if(mysql_num_rows($requete) == 0) {
-							echo 'Aucune liste révisée. <a href="?page=gerer_public">Commencer maintenant</a>!';
+						if(sizeof($requete) == 0) {
+							echo 'Aucune liste révisée.<br><a href="?page=gerer_public">Commencer maintenant</a> !';
 						}
 						else {
-							while($resultat = mysql_fetch_array($requete)) {
-								if($resultat['id_liste'] == 'no') {
+							foreach($requete as $resultat) {
+								if($resultat->id_liste() == 'no') {
 									$id_liste = 'Mots entrés par vous pour une utilisation unique';
 								}
 								else {
-									$id = $resultat['id_liste'];
+									$id = $resultat->id_liste();
 									if(empty($id)){
 										$id_liste = 'Mots entrés par vous pour une utilisation unique';
 									}
 									else {
 										$query = getListeById($id);
-										$titre = $query->titre();
+										foreach($query as $query_r){
+											$titre = $query_r->titre();
+										}
 										$id_liste = '<a href="afficher?id='.$id.'">'.$titre.'</a>';
 									}
 								}
-								?><?php echo $i ?>. <?php echo $id_liste ?> - <b>Moyenne de la révision: <?php echo $resultat['moyenne'] ?>%</b> - <small>Revisé le <?php echo $resultat['date']?>. </small><br /><br /> <?php
+								?><?php echo $i ?>. <?php echo $id_liste ?> - <b>Moyenne de la révision: <?php echo $resultat->moyenne() ?>%</b> - <small>Revisé le <?php echo $resultat->date()?>. </small><br /><br /> <?php
 								$i++;
 							}
 						}
@@ -89,20 +91,23 @@
 						<h3>Favoris</h3>
 						<?php
 						$membre = $_SESSION['login'];
-						$requete_favoris = mysql_query("SELECT * FROM favoris WHERE membre = '$membre'")or die(mysql_error());
-						$nombre = mysql_num_rows($requete_favoris);
+						$requete_favoris = getFavoriByPseudoLimit20($membre);
+						$nombre = sizeof($requete_favoris);
 						if($nombre == 0){
 							echo 'Vous n\'avez aucune liste en favoris.';
 						}
 						else {
 							$i = '1';
-							while($rendu = mysql_fetch_array($requete_favoris)) {
-								$liste = $rendu['id_liste'];
-								$requete_listes = getListeById($liste);
-								echo ''.$i.'. ';
-								?><a href="afficher?id=<?php echo $requete_listes->id() ?>"><?php echo $requete_listes->titre() ?></a> - <small><?php echo $requete_listes->categorie() ?></small><br /><?php
-								$i++;
+							foreach($requete_favoris as $rendu) {
+								$liste = $rendu->id_liste();
+								$requete_listes_r = getListeById($liste);
+								foreach($requete_listes_r as $requete_listes){
+									echo ''.$i.'. ';
+									?><a href="afficher?id=<?php echo $requete_listes->id() ?>"><?php echo $requete_listes->titre() ?></a> - <small><?php echo $requete_listes->categorie() ?></small><br /><?php
+									$i++;
+								}
 							}
+						?><br><a href="?page=membre_all">Tout voir</a><br><?php
 						}
 						?>		
 					</div>

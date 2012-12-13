@@ -22,7 +22,7 @@ class CategorieManager extends DbManager{
 	
 	public function getCategorieByName($name){
 		$query = "select * from ".$this->table." where categorie = :categorie" ;
-		$entity = new Categorie(array("categorie1"=>$name));
+		$entity = new Categorie(array("categorie"=>$name));
 		return $this->select($query, $entity);
 	}
 	

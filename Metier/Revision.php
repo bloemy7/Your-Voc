@@ -1,14 +1,14 @@
 <?php
 class Revision extends Entity{
 	private $membre;
-	private $listesDefinition;
+	private $id_liste;
 	private $moyenne;
 	private $date;
 	
 	public function __construct(array $donnees){
 		if(isset($donnees['id']))$this->id = $donnees['id'];
 		if(isset($donnees['pseudo']))$this->nom = $donnees['pseudo'];
-		if(isset($donnees['id_liste']))$this->listesDefinition = $donnees['id_liste'];
+		if(isset($donnees['id_liste']))$this->id_liste = $donnees['id_liste'];
 		if(isset($donnees['moyenne']))$this->moyenne = $donnees['moyenne'];
 		if(isset($donnees['date']))$this->date = $donnees['date'];
 	}
@@ -25,11 +25,11 @@ class Revision extends Entity{
 	public function setMembre($p_membre){
 		$this->membre = $p_membre;
 	}
-	public function listesDefinition(){
-		return $this->listesDefinition;
+	public function id_liste(){
+		return $this->id_liste;
 	}
-	public function setListesDefinition($p_listesDefinition){
-		$this->listesDefinition = $p_listesDefinition;
+	public function setId_liste($p_id_liste){
+		$this->id_liste = $p_id_liste;
 	}
 	public function moyenne(){
 		return $this->moyenne;

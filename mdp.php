@@ -26,14 +26,17 @@ if (!isset($_SESSION['login'])) {
 			{
 				$login = $_SESSION['login'];
 				$pass = getPassByLogin($login);
-				$mdp = $pass->pass();
+				foreach($pass as $pass_r){
+					$mdp = $pass_r->pass();
+				}
 				if($mdp == md5($_POST['ancien_mdp'])) {
 					if($_POST['new_mdp'] != $_POST['new_mdp_2']) {
 						echo "Les mots de passes ne concordent pas.<br />";
 					}
 					else {
 						$new_mdp_bon = md5($_POST['new_mdp']);
-						mysql_query("UPDATE membre SET pass_md5 = '".mysql_real_escape_string($new_mdp_bon)."' WHERE login='".$_SESSION['login']."'") or die(mysql_error());
+						$login = $_SESSION['login'];
+						updateMdpByLogin($new_mdp_bon, $login);
 						echo 'Votre mot de passe a bien été changé! <br />';
 					}
 				}

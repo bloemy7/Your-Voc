@@ -74,7 +74,7 @@ abstract class DbManager {
 	}
 	
 	public function bind($query, $entity){	
-		preg_match_all('#\s?:\s?[a-zA-Z0-9]+\s?#', $query, $explodeQ);
+		preg_match_all('#\s?:\s?[a-zA-Z0-9_]+\s?#', $query, $explodeQ);
 		$explodeQuery = $explodeQ[0];
 		$bindingArrayQuery = array();
 		foreach($explodeQuery as $partQuery){		

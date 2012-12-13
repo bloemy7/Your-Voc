@@ -129,7 +129,7 @@
 					if($_POST['type'] == 'supprimer') {
 						if($_POST['pseudo'] == $_SESSION['login']) {
 							$id = mysql_real_escape_string($_POST['id']);
-							if(mysql_query("DELETE FROM listes_public WHERE id = '$id' AND pseudo = '$pseudo'")) {
+							if(deleteListeByIdAndPseudo($id, $pseudo)) {
 								echo 'La liste a été supprimée avec succès.';
 								echo '<a href="javascript:history.back()">Revenez à la page précédente!</a><br /> ';
 							}
@@ -152,7 +152,7 @@
 					$id2 = mysql_real_escape_string($_POST['id2']);
 					$pseudo2 = mysql_real_escape_string($_POST['pseudo2']);
 					$commentaire2 = mysql_real_escape_string($_POST['new_com']);
-					if(mysql_query("UPDATE listes_public SET liste = '$new_mot', titre = '$new_titre', categorie = '$categorie', categorie2 = '$categorie2', commentaire = '$commentaire2' WHERE id = '$id2' AND pseudo = '$pseudo2'")) {
+					if(updateListe($new_mot, $categorie, $categorie2, $new_titre, $id2, $pseudo2, $commentaire2)) {
 						echo '<h4>Votre liste a été modifiée avec succès.</h4><br />';
 					}
 					else {

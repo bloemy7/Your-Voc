@@ -10,7 +10,7 @@ class ErreurManager extends DbManager{
 	
 	protected function binding(){
 		$this->arrayBinding[$this->ID_COLUMN] = "id";
-		$this->arrayBinding["id_liste"] = "listesDefinition";
+		$this->arrayBinding["id_liste"] = "id_liste";
 		$this->arrayBinding["pseudo"] = "membre";
 		$this->arrayBinding["type"] = "type";
 		$this->arrayBinding["message"] = "message";

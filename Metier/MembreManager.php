@@ -46,5 +46,10 @@ class MembreManager extends DbManager{
 		$statement = $this->_db->prepare($query);
 		$statement->execute();
 	}
+	public function updateMdpByLogin($mdp, $pseudo){
+		$query = "update ".$this->table." set pass_md5 = '$mdp' where login = '$pseudo' " ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();		
+	}
 }
 ?>

@@ -150,5 +150,20 @@ class ListeMotDefinitionManager extends DbManager {
 		$entity = new ListeMotDefinition();
 		return $this->select($query, $entity);
 	}
+	public function updateNoteInListe($id_liste, $note){
+		$query = "update ".$this->table." set note = '".$note."' where id = '".$id_liste."'" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
+	}
+	public function deleteListeByIdAndPseudo($id, $pseudo){
+		$query = "delete from ".$this->table." where id = '".$id."' and pseudo = '".$pseudo."'" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
+	}
+	public function updateListe($mot, $categorie, $categorie2, $titre, $id, $pseudo, $commentaire){
+		$query = "UPDATE ".$this->table." SET liste = '$mot', titre = '$titre', categorie = '$categorie', categorie2 = '$categorie2', commentaire = '$commentaire' WHERE id = '$id' AND pseudo = '$pseudo'" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
+	}
 }
 ?>

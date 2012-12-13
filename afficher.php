@@ -14,8 +14,16 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 			if(isset($_POST['favoris'])) {
 				$id_liste = mysql_real_escape_string($_GET['id']);
 				$membre = $_POST['membre'];
-				if(mysql_query("INSERT INTO favoris VALUES('', '$id_liste', '$membre')")) {
+				if(createFavori($id_liste, $membre)) {
 					echo 'Ajouté aux favoris!';
+				}
+			}
+			if(isset($_POST['retirer'])) {
+				$id_liste = mysql_real_escape_string($_GET['id']);
+				$membre = $_POST['membre'];
+				if(deleteFavoriByIdAndMembre($id_liste, $membre)) {
+					echo 'Supprimé des favoris!';
+					?><META HTTP-EQUIV="Refresh" CONTENT="1; URL=afficher?id=<?php echo $_GET['id']?>"><?php
 				}
 			}
 			if(isset($_POST['note_submit'])) {
@@ -23,22 +31,27 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 				$id = mysql_real_escape_string($_GET['id']);
 				$pseudo = $_SESSION['login'];		
 				$note = $_POST['note'];
+				$checkVote = getVotesByIdAndPseudo($id_liste, $pseudo);
+				if(sizeof($checkVote)!= 0){
+					echo 'Vous avez déjà voté pour cette liste.';
+					die('<meta http-equiv="refresh" content="2">'); 
+				}
 				if(is_numeric($note)) {
 					if($note > 5) {
 						echo 'Un problème est apparu, veuillez réessayer.';
 					}
 					else {
-						if(mysql_query("INSERT INTO vote VALUES('', '".$id_liste."', '".$note."', '".$pseudo."')")) {
+						if(createVote($id_liste, $note, $pseudo)) {
 							echo 'Merci d\'avoir voté.';
-							$requete_note1 = mysql_query("SELECT * FROM vote WHERE id_liste = '$id'");
-							$resultat_note1 = mysql_num_rows($requete_note1);
+							$requete_note1 = getVotesById($id);
+							$resultat_note1 = sizeof($requete_note1);
 							$total = 0;
-							while($sql1 = mysql_fetch_array($requete_note1)) {
-								$total = ($total + $sql1['note']);
+							foreach($requete_note1 as $vote) {
+								$total += $vote->note();
 							}
 							$resultat_final1 = ($total / $resultat_note1);
 							$resultat_final1 = round($resultat_final1, 2);
-							mysql_query("UPDATE listes_public SET note = '$resultat_final1' WHERE id = '$id_liste'");
+							updateNoteInListe($id_liste, $resultat_final1);
 						}
 					}
 				}
@@ -70,16 +83,16 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 						$question = array();
 						$o = 0;
 						echo '<h2>'.$titre.' - <small>'.$categorie.' -> '.$categorie2.' ('.$nombre_lignes.' mots)</small></h2>';
-						$requete_note = mysql_query("SELECT * FROM vote WHERE id_liste = '$id'");
-						$resultat_note = mysql_num_rows($requete_note);
+						$requete_note = getVotesById($id);
+						$resultat_note = sizeof($requete_note);
 						echo ''.$vues.' vues / '.$resultat_note.' votes / ';
 						if($resultat_note < 1){
 							echo 'Pas assez de vote pour donner une moyenne.   ';
 						}
 						else {
 							$total = 0;
-							while($sql = mysql_fetch_array($requete_note)) {
-								$total = ($total + $sql['note']);
+							foreach($requete_note as $sql) {
+								$total = ($total + $sql->note());
 							}
 							$resultat_final = ($total / $resultat_note);
 							$resultat_final = round($resultat_final, 2);
@@ -87,8 +100,8 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 						}
 						if(isset($_SESSION['login'])) {
 							$pseudo = $_SESSION['login'];
-							$query_note = mysql_query("SELECT * FROM vote WHERE id_liste = '$id' AND pseudo = '$pseudo'");
-							$nombre_vote = mysql_num_rows($query_note);
+							$query_note = getVotesByIdAndPseudo($id, $pseudo);
+							$nombre_vote = sizeof($query_note);
 							if($nombre_vote != 0) {
 								echo 'Vous avez déjà  voté pour cette liste.<br />';
 							}
@@ -112,8 +125,8 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 						?><a href="signaler?id=<?php echo $id ?>"><small>Signaler une erreur dans la liste</small></a><?php
 						if(isset($_SESSION['login'])) {
 						$membre = $_SESSION['login'];
-						$sql_favoris = mysql_query("SELECT * FROM favoris WHERE id_liste = '$id' AND membre = '$membre'");
-						$resultat_fav = mysql_num_rows($sql_favoris);
+						$sql_favoris = getFavoriByIdAndPseudo($id, $membre);
+						$resultat_fav = sizeof($sql_favoris);
 						if($resultat_fav == 0) {
 								?>
 								<form method="post" action="afficher?id=<?php echo $id ?>">
@@ -145,14 +158,6 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 							<input type="submit" value="Combiner avec une autre liste" />
 						</form>
 						<?php
-						if(isset($_POST['retirer'])) {
-							$id_liste = mysql_real_escape_string($_GET['id']);
-							$membre = $_POST['membre'];
-							if(mysql_query("DELETE FROM favoris WHERE id_liste = '$id_liste' AND membre = '$membre'")) {
-								echo 'Supprimé des favoris!';
-								?><META HTTP-EQUIV="Refresh" CONTENT="1; URL=afficher?id=<?php echo $_GET['id']?>"><?php
-							}
-						}
 							$lignes = 0;
 							$lignes = explode("\n", $liste);
 							$nombre_lignes = 0;
@@ -211,14 +216,13 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 						?><a href="profil?m=<?php echo $pseudo?>"><?php echo $pseudo?></a>  
 						<?php echo 'le <b>'.$date.'</b><br /></small>';
 						echo '<div id="commentaire">';
-						$retour = mysql_query("SELECT COUNT(*) AS nbre_entrees FROM commentaires WHERE id_liste = '$id'");
-						$test = mysql_fetch_array($retour);	
-						echo '<h2>Commentaires ('.$test['nbre_entrees'].')</h2><br />';
-						if($test['nbre_entrees'] != 0) {
-							$comm = mysql_query("SELECT * FROM commentaires WHERE id_liste = '$id'");
-							while($comm_r = mysql_fetch_array($comm)){
-								echo '<b>'.$comm_r['commentaire'].'</b><br />';
-								echo '<small>Par <a href="profil?m='.$comm_r['pseudo'].'">'.$comm_r['pseudo'].'</a> le '.$comm_r['date'].'</small><br /><br />';
+						$retour = countNbCommentairesById($id);
+						echo '<h2>Commentaires ('.$retour.')</h2><br />';
+						if($retour != 0) {
+							$comm = getCommentairesById($id);
+							foreach($comm as $comm_r){
+								echo '<b>'.$comm_r->commentaire().'</b><br />';
+								echo '<small>Par <a href="profil?m='.$comm_r->membre().'">'.$comm_r->membre().'</a> le '.$comm_r->date().'</small><br /><br />';
 							}
 						}
 						else {
@@ -246,7 +250,11 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 										 echo 'L\'email entré est invalide.';
 									}
 									else {
-										mysql_query("INSERT INTO commentaires VALUES('', '".htmlspecialchars(mysql_escape_string($id))."', '".htmlspecialchars(mysql_escape_string($pseudo))."', '".htmlspecialchars(mysql_escape_string($time))."', '".htmlspecialchars(mysql_escape_string($commentaire))."')")or die(mysql_error());
+										$id_liste = htmlspecialchars(mysql_escape_string($id));
+										$pseudo = htmlspecialchars(mysql_escape_string($pseudo));
+										$time = htmlspecialchars(mysql_escape_string($time));
+										$commentaire = htmlspecialchars(mysql_escape_string($commentaire));
+										createCommentaire($id_liste, $pseudo, $time, $commentaire);
 										echo 'Votre commentaire a bien été sauvegardé. <br />';	
 										?><META HTTP-EQUIV="Refresh" CONTENT="0; URL=afficher?id=<?php echo $_GET['id']?>"><?php													
 									}
@@ -266,7 +274,11 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 													echo 'Votre pseudo est invalide. Caractères autorisés: lettres, chiffres,et _! Minimum 5 caractères, maximum 20.';
 												}
 												else {
-													if(mysql_query("INSERT INTO commentaires VALUES('', '".htmlspecialchars(mysql_escape_string($id))."', '".htmlspecialchars(mysql_escape_string($pseudo))."', '".htmlspecialchars(mysql_escape_string($time))."', '".htmlspecialchars(mysql_escape_string($commentaire))."')")) {
+													$id_liste = htmlspecialchars(mysql_escape_string($id));
+													$pseudo = htmlspecialchars(mysql_escape_string($pseudo));
+													$time = htmlspecialchars(mysql_escape_string($time));
+													$commentaire = htmlspecialchars(mysql_escape_string($commentaire));
+													if(createCommentaire($id_liste, $pseudo, $time, $commentaire)) {
 													echo 'Votre commentaire a bien été sauvegardé. <br />';	
 													?><META HTTP-EQUIV="Refresh" CONTENT="0; URL=afficher?id=<?php echo $_GET['id']?>"><?php
 													}
@@ -297,7 +309,9 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 						if(isset($_SESSION['login'])) {
 							$pseudo = $_SESSION['login'];
 							$result = getMembreByLogin($pseudo);
-							echo 'Connecté en tant que '.$_SESSION['login'].'. Pas vous? <a href="deconnexion">Déconnectez-vous!</a> <input type="hidden" name="pseudo" value='.$pseudo.' />  <input type="hidden" name="email" value="'.$result->email().'" />';
+							foreach($result as $result1){
+								echo 'Connecté en tant que '.$_SESSION['login'].'. Pas vous? <a href="deconnexion">Déconnectez-vous!</a> <input type="hidden" name="pseudo" value='.$pseudo.' />  <input type="hidden" name="email" value="'.$result1->email().'" />';
+							}
 						}
 						else {
 							echo '<p>Pseudo : <br /><input type="text" name="pseudo" /><br />';
@@ -318,7 +332,7 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 				}
 			}
 			else{
-				echo 'Veuillez préciser un id valable svp.2';
+				echo 'Veuillez préciser un id valable svp.';
 			}
 			?>
 		</div>

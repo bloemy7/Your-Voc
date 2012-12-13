@@ -117,7 +117,7 @@ if(isset($_POST['ok']) OR isset($_GET['cat'])) {
 		$categorie1 = $fonction->nom();
 	}
 	echo '<center><h2>'.htmlspecialchars($categorie1).'</h2></center>';
-	$sql1 = mysql_query("SELECT * FROM listes_public WHERE categorie = '$categorie1' OR categorie2 = '$categorie1' ORDER BY id DESC"); 
+	$sql1 = $sql1 = getListeByCategorie($categorie1); 
 	$nombre = mysql_num_rows($sql1);
 	if($nombre == 0) {
 		echo 'Il n\'y a aucune liste de disponible pour cette catégorie.';
