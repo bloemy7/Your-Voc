@@ -24,23 +24,25 @@
 		<div id="container">
 			<div id="col1">
 				<h3>3 dernières listes révisées</h3><?php
-				$requete = mysql_query("SELECT * FROM revise WHERE pseudo = '$pseudo' ORDER BY id DESC LIMIT 3");
+				$requete = getRevisionsByPseudoLimit3($pseudo);
 				$i = 1;
-				if(mysql_num_rows($requete) == 0) {
+				if(sizeof($requete) == 0) {
 					echo 'Aucune liste révisée.';
 				}
 				else {
-					while($resultat = mysql_fetch_array($requete)) {
-						if($resultat['id_liste'] == 'no') {
+					foreach($requete as $resultat) {
+						if($resultat->id_liste() == 'no') {
 							$id_liste = 'Mots entrés par '.$pseudo.' pour une utilisation unique';
 						}
 						else {
-							$id = $resultat['id_liste'];
+							$id = $resultat->id_liste();
 							$query = getListeById($id);
-							$titre = $query->titre();
-							$id_liste = '<a href="afficher?id='.$id.'">'.$titre.'</a>';
+							foreach($query as $query_r){
+								$titre = $query_r->titre();
+								$id_liste = '<a href="afficher?id='.$id.'">'.$titre.'</a>';
+							}
 						}
-						?><?php echo $i ?>. <?php echo $id_liste ?> - <b>Moyenne de la révision: <?php echo $resultat['moyenne'] ?>%</b> - <small>Revisé le <?php echo $resultat['date']?>. </small><br /> <?php
+						?><?php echo $i ?>. <?php echo $id_liste ?> - <b>Moyenne de la révision: <?php echo $resultat->moyenne() ?>%</b> - <small>Revisé le <?php echo $resultat->date()?>. </small><br /> <?php
 						$i++;
 					}
 				}
@@ -62,19 +64,21 @@
 				<div id="col2side">
 					<h3>Ses favoris</h3>
 					<?php
-					$requete_favoris = mysql_query("SELECT * FROM favoris WHERE membre = '$pseudo'")or die(mysql_error());
-					$nombre = mysql_num_rows($requete_favoris);
+					$requete_favoris = getFavoriByPseudoLimit20($pseudo);
+					$nombre = sizeof($requete_favoris);
 					if($nombre == 0){
 						echo ''.$pseudo.' n\'a aucune liste en favoris.';
 					}
 					else {
 						$i = '1';
-						while($rendu = mysql_fetch_array($requete_favoris)) {
-							$liste = $rendu['id_liste'];
+						foreach($requete_favoris as $rendu) {
+							$liste = $rendu->id_liste();
 							$requete_listes = getListeById($liste);
-							echo ''.$i.'. ';
-							?><a href="afficher?id=<?php echo $requete_listes->id() ?>"><?php echo $requete_listes->titre() ?></a> - <small><?php echo $requete_listes->categorie() ?></small><br /><?php
-							$i++;
+							foreach($requete_listes as $requete_listes_r){
+								echo ''.$i.'. ';
+								?><a href="afficher?id=<?php echo $requete_listes_r->id() ?>"><?php echo $requete_listes_r->titre() ?></a> - <small><?php echo $requete_listes_r->categorie() ?></small><br /><?php
+								$i++;
+							}
 						}
 					}
 					?>

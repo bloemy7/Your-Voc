@@ -13,11 +13,22 @@ class CombinaisonManager extends DbManager{
 		$this->arrayBinding["liste"] = "liste";
 		$this->arrayBinding["pseudo"] = "membre";
 		$this->arrayBinding["titre"] = "titre";
-		$this->arrayBinding["id_liste"] = "id_listeOrigine";
+		$this->arrayBinding["id_liste"] = "id_liste";
 	}
 	
 	protected function newInstanceEntity($donnees){
 		return new Combinaison($donnees);
+	}
+	
+	public function getCombinaisonByPseudoLimit5($pseudo){
+		$query = "select * from ".$this->table." where pseudo = :pseudo ORDER BY id DESC LIMIT 5";
+		$entity = new Combinaison(array("pseudo"=>$pseudo));
+		return $this->select($query, $entity);		
+	}
+	public function getCombinaisonByPseudoLimit15($pseudo){
+		$query = "select * from ".$this->table." where pseudo = :pseudo ORDER BY id DESC LIMIT 15";
+		$entity = new Combinaison(array("pseudo"=>$pseudo));
+		return $this->select($query, $entity);
 	}
 }
 ?>

@@ -1,5 +1,5 @@
 <?php
-class Commentaire extends Entity{
+class Combinaison extends Entity{
 	private $idListeOrigine;
 	private $membre;
 	private $liste;
@@ -10,7 +10,7 @@ class Commentaire extends Entity{
 		if(isset($donnees['liste']))$this->liste = $donnees['liste'];
 		if(isset($donnees['pseudo']))$this->membre = $donnees['pseudo'];
 		if(isset($donnees['titre']))$this->titre = $donnees['titre'];
-		if(isset($donnees['id_liste']))$this->id_listeOrigine = $donnees['id_liste'];
+		if(isset($donnees['id_liste']))$this->id_liste = $donnees['id_liste'];
 	}
 	
 	public function id(){
@@ -41,11 +41,11 @@ class Commentaire extends Entity{
 		$this->commentaire = $titre;
 	}
 	
-	public function idListeOrigine(){
+	public function id_liste(){
 		return $this->id_liste;
 	}
-	public function setIdListeOrigine($idListe){
-		$this->idListeOrigine = $idListe;
+	public function setId_Liste($idListe){
+		$this->id_liste = $idListe;
 	}
 }
 ?>

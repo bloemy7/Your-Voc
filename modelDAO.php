@@ -18,6 +18,8 @@ require "/Metier/Revision.php";
 require "/Metier/RevisionManager.php";
 require "/Metier/Vote.php";
 require "/Metier/VoteManager.php";
+require "/Metier/Combinaison.php";
+require "/Metier/CombinaisonManager.php";
 
 function dbconnect(){
 	dbConfiguration();
@@ -47,6 +49,7 @@ function dbConfiguration(){
 	DBHelper::addManager(new FavoriManager());
 	DBHelper::addManager(new ErreurManager());
 	DBHelper::addManager(new CommentaireManager());
+	DBHelper::addManager(new CombinaisonManager());
 }
 
 function getProperty($propertyName){
@@ -374,5 +377,13 @@ function getFavoriByPseudoLimit50($membre){
 function getRevisionsByPseudoLimit3($pseudo){
 	$revisions = DBHelper::getDBManager("Revision")->getRevisionsByPseudoLimit3($pseudo);
 	return $revisions;
+}
+function getCombinaisonByPseudoLimit5($pseudo){
+	$combinaisons = DBHelper::getDBManager("Combinaison")->getCombinaisonByPseudoLimit5($pseudo);
+	return $combinaisons;
+}
+function getCombinaisonByPseudoLimit15($pseudo){
+	$combinaisons = DBHelper::getDBManager("Combinaison")->getCombinaisonByPseudoLimit15($pseudo);
+	return $combinaisons;
 }
 ?>
